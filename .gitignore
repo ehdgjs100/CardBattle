@@ -97,3 +97,7 @@ InitTestScene*.unity*
 
 # Auto-generated scenes by play mode tests
 /[Aa]ssets/[Ii]nit[Tt]est[Ss]cene*.unity*
+
+# Imported art asset packs (not required for submission)
+/[Aa]ssets/[Aa]ssets/
+/[Aa]ssets/[Aa]ssets.meta

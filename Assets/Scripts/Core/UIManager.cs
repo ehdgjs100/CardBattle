@@ -1,0 +1,75 @@
+using UnityEngine;
+
+public class UIManager : MonoBehaviour
+{
+    public static UIManager Instance { get; private set; }
+
+    [SerializeField] private BattleSlot[] playerSlots;
+    [SerializeField] private BattleSlot[] enemySlots;
+    [SerializeField] private WaitingCardCount playerWaitingCount;
+    [SerializeField] private WaitingCardCount enemyWaitingCount;
+    [SerializeField] private TurnBanner turnBanner;
+    [SerializeField] private ActionPanel actionPanel;
+    [SerializeField] private ResultPanel resultPanel;
+
+    private void Awake()
+    {
+        Instance = this;
+    }
+
+    private void Start()
+    {
+        GameManager.Instance.OnStateChanged += HandleStateChanged;
+        TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameManager.Instance != null)
+            GameManager.Instance.OnStateChanged -= HandleStateChanged;
+
+        if (TurnManager.Instance != null)
+            TurnManager.Instance.OnSelectionChanged -= HandleSelectionChanged;
+    }
+
+    private void HandleStateChanged(GameState state)
+    {
+        RefreshField(playerSlots, GameManager.Instance.PlayerField);
+        RefreshField(enemySlots, GameManager.Instance.EnemyField);
+        playerWaitingCount.SetCount(GameManager.Instance.PlayerField.WaitingCount);
+        enemyWaitingCount.SetCount(GameManager.Instance.EnemyField.WaitingCount);
+
+        switch (state)
+        {
+            case GameState.PlayerSelectCard:
+                turnBanner.Show("플레이어 턴");
+                break;
+            case GameState.EnemyTurn:
+                turnBanner.Show("적 턴");
+                break;
+            case GameState.Win:
+            case GameState.Lose:
+                resultPanel.Show(state == GameState.Win ? GameResult.Win : GameResult.Lose);
+                break;
+        }
+
+        HandleSelectionChanged();
+    }
+
+    private void HandleSelectionChanged()
+    {
+        CardInstance selected = TurnManager.Instance.SelectedAttacker;
+
+        for (int i = 0; i < playerSlots.Length; i++)
+            playerSlots[i].SetHighlight(selected != null && playerSlots[i].Card == selected);
+
+        bool canConfirm = selected != null && GameManager.Instance.CurrentState == GameState.PlayerSelectCard;
+        actionPanel.SetInteractable(canConfirm);
+    }
+
+    private void RefreshField(BattleSlot[] slots, CardField field)
+    {
+        for (int i = 0; i < slots.Length; i++)
+            slots[i].Bind(field.Slots[i]);
+    }
+}
