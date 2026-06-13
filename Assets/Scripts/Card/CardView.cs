@@ -8,7 +8,9 @@ public class CardView : MonoBehaviour
     [SerializeField] private Image frameImage;
     [SerializeField] private Image typeIconImage;
     [SerializeField] private TMP_Text cardNameText;
-    [SerializeField] private HPBar hpBar;
+    [SerializeField] private HPText hpText;
+    [SerializeField] private GameObject frontRoot;
+    [SerializeField] private GameObject cardBack;
 
     public void Bind(CardInstance instance)
     {
@@ -23,6 +25,13 @@ public class CardView : MonoBehaviour
         }
 
         cardNameText.text = instance.data.cardName;
-        hpBar.Init(instance.data.maxHP, instance.currentHP);
+        hpText.Init(instance.data.maxHP, instance.currentHP);
+        SetFaceDown(false);
+    }
+
+    public void SetFaceDown(bool faceDown)
+    {
+        frontRoot.SetActive(!faceDown);
+        cardBack.SetActive(faceDown);
     }
 }
