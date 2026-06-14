@@ -10,7 +10,6 @@ public class UIManager : MonoBehaviour
     [SerializeField] private WaitingCardCount playerWaitingCount;
     [SerializeField] private WaitingCardCount enemyWaitingCount;
     [SerializeField] private TurnBanner turnBanner;
-    [SerializeField] private ActionPanel actionPanel;
     [SerializeField] private ResultPanel resultPanel;
 
     private void Awake()
@@ -73,9 +72,6 @@ public class UIManager : MonoBehaviour
 
         for (int i = 0; i < playerSlots.Length; i++)
             playerSlots[i].SetHighlight(selected != null && playerSlots[i].Card == selected);
-
-        bool canConfirm = selected != null && GameManager.Instance.CurrentState == GameState.PlayerSelectCard;
-        actionPanel?.SetInteractable(canConfirm);
     }
 
     private void RefreshField(BattleSlot[] slots, CardField field)

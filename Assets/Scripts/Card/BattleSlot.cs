@@ -57,7 +57,7 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
 
         if (Card.owner == Owner.Player && state == GameState.PlayerSelectCard)
             TurnManager.Instance.SelectAttacker(Card);
-        else if (Card.owner == Owner.Enemy && state == GameState.PlayerSelectTarget)
+        else if (Card.owner == Owner.Enemy && state == GameState.PlayerSelectCard)
             TurnManager.Instance.SelectTarget(Card);
     }
 }

@@ -11,7 +11,16 @@ public class BattleManager : MonoBehaviour
 
     public void ApplyAttack(CardInstance attacker, CardInstance target, CardField attackerField, CardField targetField)
     {
+        int attackerHPBefore = attacker.currentHP;
+        int targetHPBefore = target.currentHP;
+
         attacker.effect.Execute(attacker, target, targetField.Slots);
+
+        int damageDealt = targetHPBefore - target.currentHP;
+        int damageReceived = attackerHPBefore - attacker.currentHP;
+        Debug.Log($"[Battle] {attacker.owner} {attacker.data.name}({attackerHPBefore}->{attacker.currentHP}) attacks " +
+            $"{target.owner} {target.data.name}({targetHPBefore}->{target.currentHP}) : dealt {damageDealt}, received {damageReceived}");
+
         attackerField.ProcessDeaths();
         targetField.ProcessDeaths();
     }

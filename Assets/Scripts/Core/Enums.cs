@@ -9,7 +9,6 @@ public enum GameState
     Init,
     PlayerTurn,
     PlayerSelectCard,
-    PlayerSelectTarget,
     ApplyEffect,
     EnemyTurn,
     CheckResult,

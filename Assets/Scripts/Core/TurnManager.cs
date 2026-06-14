@@ -56,21 +56,12 @@ public class TurnManager : MonoBehaviour
         return true;
     }
 
-    public bool ConfirmAttack()
+    public bool SelectTarget(CardInstance target)
     {
         if (GameManager.Instance.CurrentState != GameState.PlayerSelectCard)
             return false;
 
         if (_selectedAttacker == null)
-            return false;
-
-        GameManager.Instance.SetState(GameState.PlayerSelectTarget);
-        return true;
-    }
-
-    public bool SelectTarget(CardInstance target)
-    {
-        if (GameManager.Instance.CurrentState != GameState.PlayerSelectTarget)
             return false;
 
         if (target == null || target.owner != Owner.Enemy || !target.IsAlive)
