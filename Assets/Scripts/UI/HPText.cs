@@ -15,6 +15,6 @@ public class HPText : MonoBehaviour
 
     public void SetHP(int currentHP)
     {
-        hpText.text = $"{currentHP}/{_maxHP}";
+        hpText.text = currentHP.ToString();
     }
 }

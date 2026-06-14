@@ -6,6 +6,7 @@ public class UIManager : MonoBehaviour
 
     [SerializeField] private BattleSlot[] playerSlots;
     [SerializeField] private BattleSlot[] enemySlots;
+    [SerializeField] private CardView cardViewPrefab;
     [SerializeField] private WaitingCardCount playerWaitingCount;
     [SerializeField] private WaitingCardCount enemyWaitingCount;
     [SerializeField] private TurnBanner turnBanner;
@@ -15,12 +16,22 @@ public class UIManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-    }
 
-    private void Start()
-    {
+        SpawnCardViews(playerSlots);
+        SpawnCardViews(enemySlots);
+
         GameManager.Instance.OnStateChanged += HandleStateChanged;
         TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
+    }
+
+    private void SpawnCardViews(BattleSlot[] slots)
+    {
+        for (int i = 0; i < slots.Length; i++)
+        {
+            CardView view = Instantiate(cardViewPrefab, slots[i].transform);
+            view.transform.SetAsFirstSibling();
+            slots[i].SetCardView(view);
+        }
     }
 
     private void OnDestroy()
@@ -36,20 +47,20 @@ public class UIManager : MonoBehaviour
     {
         RefreshField(playerSlots, GameManager.Instance.PlayerField);
         RefreshField(enemySlots, GameManager.Instance.EnemyField);
-        playerWaitingCount.SetCount(GameManager.Instance.PlayerField.WaitingCount);
-        enemyWaitingCount.SetCount(GameManager.Instance.EnemyField.WaitingCount);
+        playerWaitingCount?.SetCount(GameManager.Instance.PlayerField.WaitingCount);
+        enemyWaitingCount?.SetCount(GameManager.Instance.EnemyField.WaitingCount);
 
         switch (state)
         {
             case GameState.PlayerSelectCard:
-                turnBanner.Show("플레이어 턴");
+                turnBanner?.Show("플레이어 턴");
                 break;
             case GameState.EnemyTurn:
-                turnBanner.Show("적 턴");
+                turnBanner?.Show("적 턴");
                 break;
             case GameState.Win:
             case GameState.Lose:
-                resultPanel.Show(state == GameState.Win ? GameResult.Win : GameResult.Lose);
+                resultPanel?.Show(state == GameState.Win ? GameResult.Win : GameResult.Lose);
                 break;
         }
 
@@ -64,7 +75,7 @@ public class UIManager : MonoBehaviour
             playerSlots[i].SetHighlight(selected != null && playerSlots[i].Card == selected);
 
         bool canConfirm = selected != null && GameManager.Instance.CurrentState == GameState.PlayerSelectCard;
-        actionPanel.SetInteractable(canConfirm);
+        actionPanel?.SetInteractable(canConfirm);
     }
 
     private void RefreshField(BattleSlot[] slots, CardField field)

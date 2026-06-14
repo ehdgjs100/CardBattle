@@ -1,6 +1,6 @@
 # 진행 현황 (Progress)
 
-> 마지막 업데이트: 2026-06-12
+> 마지막 업데이트: 2026-06-13
 
 ---
 
@@ -8,7 +8,7 @@
 
 ### 코어 로직 (스크립트, 컴파일 확인됨)
 - [x] `Card/Data/CardDataBase.cs` (abstract SO) + `NormalCardData`, `RangedCardData`, `MusoCardData`, `HealerCardData`
-- [x] `Card/Visual/CardVisualConfig.cs`
+- [x] `Card/Visual/CardVisualConfig.cs` (`illustration`, `typeIcon`, `frameColor` 등)
 - [x] `Card/Effects/CardEffect.cs` (Strategy) + `NormalEffect`, `RangedEffect`, `MusoEffect`, `HealerEffect`
 - [x] `Card/CardInstance.cs`, `Card/CardField.cs` (3슬롯 필드 + 대기 카드 큐, 자동 보충/사망 처리)
 - [x] `Core/Enums.cs` (`Owner`, `GameState`, `GameResult`)
@@ -18,35 +18,46 @@
 - [x] `AI/EnemyAI.cs` (공격자=HP최대, 대상=HP최소·동점시 슬롯낮은순)
 
 ### UI / View 스크립트
-- [x] `Card/CardView.cs` (일러스트/프레임색/이름/HP바 바인딩)
+- [x] `Card/CardView.cs` (일러스트/프레임색/타입아이콘/이름/HP텍스트 바인딩, `SetFaceDown`으로 앞뒤 토글)
 - [x] `Card/BattleSlot.cs` (슬롯 바인딩, 하이라이트, `IPointerClickHandler` 클릭 처리)
 - [x] `Core/UIManager.cs` (상태/선택 이벤트 구독 → 필드/배너/액션패널/결과창 갱신)
-- [x] `UI/HPBar.cs`, `UI/TurnBanner.cs`, `UI/ActionPanel.cs`, `UI/WaitingCardCount.cs`, `UI/ResultPanel.cs`
+- [x] `UI/HPText.cs`(HP를 텍스트로 표시, 기존 `HPBar.cs`는 삭제), `UI/TurnBanner.cs`, `UI/ActionPanel.cs`, `UI/WaitingCardCount.cs`, `UI/ResultPanel.cs`
 
-### 테스트 덱 SO 에셋 (`Assets/ScriptableObjects/`)
+### 테스트 덱 SO 에셋 (`Assets/Datas/`)
 - [x] `Cards/Normal_Knight`(기사 HP10), `Cards/Ranged_Archer`(궁수 HP8), `Cards/Muso_Dragon`(드래곤 HP12, splash 0.5), `Cards/Healer_Cleric`(성직자 HP6, heal 1)
-- [x] `Visuals/Visual_Knight`(회색) / `Visual_Archer`(파랑) / `Visual_Dragon`(빨강) / `Visual_Cleric`(초록) — frameColor만 설정, 일러스트 없음
+- [x] `Visuals/Visual_Knight`(회색) / `Visual_Archer`(파랑) / `Visual_Dragon`(빨강) / `Visual_Cleric`(초록) — frameColor만 설정, illustration/typeIcon 미설정
+
+### 카드 프리팹 (`Assets/Prefabs/CardPrefab.prefab`)
+- [x] 구조: `CardPrefab(CardView) > Front(Background, Illustration, TypeIcon, NameText, HPText) / CardBack`
+- [x] 앞/뒤 토글: `CardView.SetFaceDown(bool)` → `Front`/`CardBack` 활성화 전환
+- [x] Front 배경과 CardBack 배경 분리 (루트 공유 Image 제거, 각각 독립적인 sprite 적용 가능)
+- [x] HP를 bar 대신 텍스트로 표시
+- [x] 카드 프레임 / HP 아이콘 / 타입 아이콘 실제 아트 적용 완료, 테스트 카드 3개(TestCard_Knight/Archer/Dragon) 씬에 배치해 비주얼 확인
 
 ### 에디터 작업
 - [x] Canvas 설정 (Screen Space - Overlay, Canvas Scaler 1080x1920 / Match 0.5)
 - [x] 매니저 오브젝트 생성 + `GameManager`/`TurnManager`/`BattleManager`/`UIManager` 부착
+- [x] GameManager `playerDeck` / `enemyDeck` 리스트 구성 (각 6장, 기존 SO 4종 조합: Normal/Archer/Muso/Cleric/Normal/Archer)
+- [x] `BattleSlotPrefab` 제작 (BattleSlot + EmptyVisual/HighlightVisual, CardView는 완전히 분리), `CardCanvas`에 Player_Slot01~03(상단)/Enemy_Slot01~03(하단) 3슬롯씩 배치
+- [x] `BattleSlot.SetCardView`로 런타임에 CardView 주입, `UIManager.Awake`에서 슬롯마다 `CardPrefab` 인스턴스 생성 후 바인딩
+- [x] `GameManager`의 `SpawnTestCards`/테스트용 필드 제거, `UIManager.playerSlots`/`enemySlots`/`cardViewPrefab` 연결
+- [x] `UIManager`의 미배치 UI(`playerWaitingCount`/`enemyWaitingCount`/`turnBanner`/`actionPanel`/`resultPanel`) 참조에 null 조건부 연산자 적용 (NRE 방지)
+- [x] Play 모드 확인: 플레이어/적 카드 3장씩 슬롯에 정상 배치 (노말/궁수/무쌍 ↔ 궁수/노말/성직자)
 
 ---
 
 ## Todo
 
 ### 에디터 작업 (다음에 이어서)
-- [ ] GameManager `playerDeck` / `enemyDeck` 리스트 구성 (각 6장, 기존 SO 4종 조합)
-- [ ] 카드 슬롯 프리팹(BattleSlot + CardView + HPBar 구조) 제작, 적/플레이어 필드 3슬롯씩 배치
-- [ ] 상단(적 영역) / 하단(플레이어 영역) 레이아웃 + `WaitingCardCount` 2개
-- [ ] `TurnBanner` (CanvasGroup + TMP_Text), `ActionPanel`(공격 버튼), `ResultPanel`(결과 텍스트 + 재시작 버튼)
-- [ ] `UIManager`에 슬롯 6개 + 위 UI 컴포넌트 참조 연결
-- [ ] Play 모드 테스트: 카드 표시 → 선택/하이라이트 → 공격 → HP 변화/자동교체 → 승패 판정 → 결과창
+- [ ] `CardVisualConfig` 4종(Normal/Archer/Muso/Cleric)에 `illustration`/`typeIcon` 스프라이트 할당
+  - 주의: 현재 CardPrefab의 Illustration/TypeIcon에 직접 넣은 placeholder 이미지는 `Bind()` 호출 시 `visual.illustration`/`visual.typeIcon`(현재 null)로 덮어써지며, `typeIcon`이 null이면 아이콘이 비활성화됨
+- [ ] 상단(적 영역) / 하단(플레이어 영역) `WaitingCardCount` 2개 제작
+- [ ] `TurnBanner` (CanvasGroup + TMP_Text), `ActionPanel`(공격 버튼), `ResultPanel`(결과 텍스트 + 재시작 버튼) 제작 후 `UIManager`에 연결
+- [ ] Play 모드 테스트: 카드 선택/하이라이트 → 공격 → HP 변화/자동교체 → 승패 판정 → 결과창
 
 ### 가산점 (Task #8 이후)
 - [ ] FX/애니메이션 (DOTween, 공격/피격/사망 연출)
 - [ ] TitleScene, ResultScene 구성
-- [ ] 카드 일러스트 적용
 - [ ] DeckScene (덱 편성/도감)
 
 ### 제출 준비 (마지막)

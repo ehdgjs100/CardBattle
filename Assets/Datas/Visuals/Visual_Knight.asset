@@ -12,8 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12170786bc9881846abe6476e6d99626, type: 3}
   m_Name: Visual_Knight
   m_EditorClassIdentifier: Assembly-CSharp::CardVisualConfig
-  illustration: {fileID: 0}
-  frameColor: {r: 0.55, g: 0.55, b: 0.55, a: 1}
+  illustration: {fileID: 21300000, guid: f7fb4ed5326a4b446bedf617c814acd9, type: 3}
+  typeIcon: {fileID: 21300000, guid: 53fcd014456a9d243975a836e5e601c2, type: 3}
+  frameColor: {r: 1, g: 1, b: 1, a: 1}
   animController: {fileID: 0}
   attackFXPrefab: {fileID: 0}
   hitFXPrefab: {fileID: 0}

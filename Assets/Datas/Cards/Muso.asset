@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66b659e4f41de674cbaef595f234a952, type: 3}
-  m_Name: Muso_Dragon
+  m_Name: Muso
   m_EditorClassIdentifier: Assembly-CSharp::MusoCardData
-  cardName: "\uB4DC\uB798\uACE4"
+  cardName: "\uBB34\uC30D"
   maxHP: 12
   description: "\uC120\uD0DD\uD55C \uC801\uC5D0\uAC8C \uD604\uC7AC HP 100% \uD53C\uD574,
     \uC778\uC811\uD55C \uC801 1\uC7A5\uC5D0\uAC8C 50% \uD53C\uD574\uB97C \uC90D\uB2C8\uB2E4."
