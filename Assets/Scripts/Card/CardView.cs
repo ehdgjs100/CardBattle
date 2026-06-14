@@ -12,6 +12,13 @@ public class CardView : MonoBehaviour
     [SerializeField] private GameObject frontRoot;
     [SerializeField] private GameObject cardBack;
 
+    public CardAttackAnimator AttackAnimator { get; private set; }
+
+    private void Awake()
+    {
+        AttackAnimator = GetComponent<CardAttackAnimator>();
+    }
+
     public void Bind(CardInstance instance)
     {
         CardVisualConfig visual = instance.data.visual;

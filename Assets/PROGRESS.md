@@ -47,6 +47,8 @@
 - [x] `TurnBanner` (CanvasGroup + TMP_Text), `ResultPanel`(결과 텍스트 + 재시작 버튼) 제작 후 `UIManager`에 연결
 - [x] Play 모드 테스트: 카드 선택/하이라이트 → 공격 확정(`ConfirmAttack`) → 대상 선택 → HP 변화/자동교체 → 대기 카드 수 갱신 → 턴 배너 갱신, 콘솔 에러 0건 확인
 - [x] 공격 흐름 변경: `ActionPanel`(공격 버튼) 제거, 내 카드 선택 → 적 카드 클릭 시 즉시 공격, 다른 내 카드 클릭 시 공격자 전환 (`PlayerSelectTarget` 상태/`ConfirmAttack` 제거)
+- [x] 공격 연출 추가: `Card/CardAttackAnimator.cs` (DOTween) — 근접(`IsMelee`) 카드는 대상 쪽으로 이동(lunge) 후 scale 펀치 + 복귀, 피격 카드는 슬라임처럼 scale이 한 번 커졌다가 작아지는 히트 리액션. `CardEffect`에 `IsMelee` 추가(`Normal`/`Healer`=true, `Ranged`/`Muso`=false), `BattleManager.OnAttackPerformed` 이벤트로 `UIManager.HandleAttackPerformed`에서 연출 트리거
+- [x] 공격 순서 동기화: `BattleManager.ApplyAttack`/`OnAttackPerformed`가 완료 콜백을 받아, 공격 연출(복귀 포함)이 끝난 뒤에 `ProcessDeaths`/필드 갱신 및 다음 공격(`EndTurn`→상대 턴)이 진행되도록 변경. 플레이어 공격 애니메이션 완료 후에만 적 턴이 시작되며, 적 공격도 동일한 연출 파이프라인을 통해 애니메이션 재생 후 다음 턴으로 진행
 
 ---
 

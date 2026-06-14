@@ -4,6 +4,8 @@ public class HealerEffect : CardEffect
 {
     private readonly int _healAmount;
 
+    public override bool IsMelee => true;
+
     public HealerEffect(int healAmount)
     {
         _healAmount = healAmount;

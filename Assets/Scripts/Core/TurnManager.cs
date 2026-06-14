@@ -68,20 +68,20 @@ public class TurnManager : MonoBehaviour
             return false;
 
         GameManager.Instance.SetState(GameState.ApplyEffect);
-        BattleManager.Instance.ApplyAttack(_selectedAttacker, target, _playerField, _enemyField);
+        CardInstance attacker = _selectedAttacker;
         _selectedAttacker = null;
         OnSelectionChanged?.Invoke();
 
-        EndTurn(Owner.Player);
+        BattleManager.Instance.ApplyAttack(attacker, target, _playerField, _enemyField, () => EndTurn(Owner.Player));
         return true;
     }
 
     private void RunEnemyTurn()
     {
         if (EnemyAI.TryDecideAction(_enemyField, _playerField, out CardInstance attacker, out CardInstance target))
-            BattleManager.Instance.ApplyAttack(attacker, target, _enemyField, _playerField);
-
-        EndTurn(Owner.Enemy);
+            BattleManager.Instance.ApplyAttack(attacker, target, _enemyField, _playerField, () => EndTurn(Owner.Enemy));
+        else
+            EndTurn(Owner.Enemy);
     }
 
     private void EndTurn(Owner turnOwner)

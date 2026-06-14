@@ -10,6 +10,7 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
 
     public int SlotIndex => slotIndex;
     public CardInstance Card { get; private set; }
+    public CardView CardView => cardView;
 
     public void SetCardView(CardView view)
     {

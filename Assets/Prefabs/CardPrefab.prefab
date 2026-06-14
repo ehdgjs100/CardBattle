@@ -339,6 +339,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4715057085704104476}
   - component: {fileID: 7008241942430827973}
+  - component: {fileID: 7431356942310649248}
   m_Layer: 0
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -386,6 +387,23 @@ MonoBehaviour:
   hpText: {fileID: 4911673500844370369}
   frontRoot: {fileID: 697012930332898009}
   cardBack: {fileID: 271778573139618309}
+--- !u!114 &7431356942310649248
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1159999236105745375}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 415f831fd6bed8e4a9f8f87dbdf63aff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CardAttackAnimator
+  lungeDuration: 0.15
+  lungeRatio: 0.6
+  attackPunchScale: 0.2
+  hitPunchScale: 0.35
+  hitDuration: 0.3
 --- !u!1 &3225913718052986380
 GameObject:
   m_ObjectHideFlags: 0

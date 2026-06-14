@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -21,6 +22,7 @@ public class UIManager : MonoBehaviour
 
         GameManager.Instance.OnStateChanged += HandleStateChanged;
         TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
+        BattleManager.Instance.OnAttackPerformed += HandleAttackPerformed;
     }
 
     private void SpawnCardViews(BattleSlot[] slots)
@@ -40,6 +42,9 @@ public class UIManager : MonoBehaviour
 
         if (TurnManager.Instance != null)
             TurnManager.Instance.OnSelectionChanged -= HandleSelectionChanged;
+
+        if (BattleManager.Instance != null)
+            BattleManager.Instance.OnAttackPerformed -= HandleAttackPerformed;
     }
 
     private void HandleStateChanged(GameState state)
@@ -78,5 +83,45 @@ public class UIManager : MonoBehaviour
     {
         for (int i = 0; i < slots.Length; i++)
             slots[i].Bind(field.Slots[i]);
+    }
+
+    private void HandleAttackPerformed(CardInstance attacker, CardInstance target, Action onAnimationComplete)
+    {
+        BattleSlot attackerSlot = FindSlot(attacker);
+        BattleSlot targetSlot = FindSlot(target);
+
+        if (attackerSlot == null || targetSlot == null)
+        {
+            onAnimationComplete?.Invoke();
+            return;
+        }
+
+        if (attacker.effect.IsMelee)
+        {
+            Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
+                - ((RectTransform)attackerSlot.transform).anchoredPosition;
+
+            attackerSlot.CardView.AttackAnimator.PlayMeleeAttack(
+                offset,
+                onImpact: () => targetSlot.CardView.AttackAnimator.PlayHitReaction(),
+                onComplete: onAnimationComplete);
+        }
+        else
+        {
+            targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
+        }
+    }
+
+    private BattleSlot FindSlot(CardInstance card)
+    {
+        for (int i = 0; i < playerSlots.Length; i++)
+            if (playerSlots[i].Card == card)
+                return playerSlots[i];
+
+        for (int i = 0; i < enemySlots.Length; i++)
+            if (enemySlots[i].Card == card)
+                return enemySlots[i];
+
+        return null;
     }
 }
