@@ -1756,6 +1756,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5bdb2679d37851498c53c017f5568cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
+  enemyTurnDelay: 0.3
 --- !u!4 &1180601257
 Transform:
   m_ObjectHideFlags: 0

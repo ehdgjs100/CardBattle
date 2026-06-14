@@ -1,9 +1,12 @@
 using System;
+using DG.Tweening;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance { get; private set; }
+
+    [SerializeField] private float enemyTurnDelay = 0.3f;
 
     private CardField _playerField;
     private CardField _enemyField;
@@ -39,7 +42,7 @@ public class TurnManager : MonoBehaviour
         else
         {
             GameManager.Instance.SetState(GameState.EnemyTurn);
-            RunEnemyTurn();
+            DOVirtual.DelayedCall(enemyTurnDelay, RunEnemyTurn);
         }
     }
 

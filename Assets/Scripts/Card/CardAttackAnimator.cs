@@ -41,6 +41,13 @@ public class CardAttackAnimator : MonoBehaviour
         sequence.OnComplete(() => onComplete?.Invoke());
     }
 
+    public void PlayAttackPulse()
+    {
+        _rect.DOKill();
+        _rect.localScale = _originalScale;
+        _rect.DOPunchScale(_originalScale * attackPunchScale, lungeDuration, 1, 0f);
+    }
+
     public void PlayHitReaction(System.Action onComplete = null)
     {
         _rect.DOKill();

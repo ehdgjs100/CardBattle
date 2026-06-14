@@ -108,6 +108,7 @@ public class UIManager : MonoBehaviour
         }
         else
         {
+            attackerSlot.CardView.AttackAnimator.PlayAttackPulse();
             targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
         }
     }
