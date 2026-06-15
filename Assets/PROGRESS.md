@@ -1,6 +1,6 @@
 # 진행 현황 (Progress)
 
-> 마지막 업데이트: 2026-06-14
+> 마지막 업데이트: 2026-06-16
 
 ---
 
@@ -51,6 +51,10 @@
 - [x] 공격 순서 동기화: `BattleManager.ApplyAttack`/`OnAttackPerformed`가 완료 콜백을 받아, 공격 연출(복귀 포함)이 끝난 뒤에 `ProcessDeaths`/필드 갱신 및 다음 공격(`EndTurn`→상대 턴)이 진행되도록 변경. 플레이어 공격 애니메이션 완료 후에만 적 턴이 시작되며, 적 공격도 동일한 연출 파이프라인을 통해 애니메이션 재생 후 다음 턴으로 진행
 - [x] `TurnManager.enemyTurnDelay`(0.3s, DOTween `DOVirtual.DelayedCall`) 추가: 플레이어 공격 결과(필드 갱신, 사망 카드 교체, 복귀 완료)가 화면에 보인 뒤 약간의 텀을 두고 적 턴 공격이 시작되도록 함
 - [x] 원거리/무쌍(`IsMelee=false`) 공격 시 공격 카드에도 연출 추가: `CardAttackAnimator.PlayAttackPulse()`(scale 펀치)를 공격 카드에 재생하고, 피격 카드는 기존 `PlayHitReaction` 유지 (`UIManager.HandleAttackPerformed`)
+- [x] 무쌍 스플래시 히트 VFX/데미지 표시 추가 (`AttackResult.SplashHits`/`UIManager.PlaySplashHits`)
+- [x] 카드 선택 하이라이트를 노란 틴트 대신 흰색 테두리+글로우 쉐이더(`UI/SelectionBorder.shader`)로 변경
+- [x] `ResultPanel` 표시 버그 수정 — 부모 GameObject(`ResultPanel`)가 비활성 상태였던 것이 원인, `ResultPanel` 활성화 + `PanelRoot`는 게임 시작 전 비활성으로 정리. Win/Lose 전환 시 패널 정상 표시 확인
+- [x] `ResultPanel` 재시작 버튼(`RetryButton`) 동작 확인 — 클릭 시 `SceneManager.LoadScene`으로 씬 재로드, `ResultPanel.Awake()` 재실행되어 패널 숨김 및 `GameState.Init`으로 초기화됨을 확인
 
 ---
 
@@ -59,7 +63,10 @@
 ### 에디터 작업 (다음에 이어서)
 - [ ] `CardVisualConfig` 4종(Normal/Archer/Muso/Cleric)에 `illustration`/`typeIcon` 스프라이트 할당
   - 주의: 현재 CardPrefab의 Illustration/TypeIcon에 직접 넣은 placeholder 이미지는 `Bind()` 호출 시 `visual.illustration`/`visual.typeIcon`(현재 null)로 덮어써지며, `typeIcon`이 null이면 아이콘이 비활성화됨
-- [ ] 승패(Win/Lose) 상황까지 게임을 진행해 `ResultPanel` 표시 및 재시작 버튼 동작 확인
+- [ ] 원거리 공격(`IsMelee=false`) 투사체 연출 — 공격 카드 이동이 없으므로, 원형 스프라이트가 공격자→대상으로 날아가는 연출 추가
+  - 조사 결과: `Hit01_VFX`처럼 캔버스에 종속되지 않는 월드 스페이스 GameObject로 처리 가능 (`CardView.SpawnFX`와 동일한 패턴, `transform.position` 기준 인스턴스화)
+  - 기존 에셋 중 바로 쓸 수 있는 채워진 원형 스프라이트 없음 (`Circle.png`는 테두리만 있는 외곽선) → 새 원형 스프라이트 에셋 필요
+  - 구현 방향: `Projectile.cs`(SpriteRenderer + DOTween 이동, 도착 시 콜백) + `ProjectilePrefab`, `CardView.PlayProjectile(targetWorldPos, onArrive)` 추가, `UIManager.HandleAttackPerformed`의 원거리 분기에서 `PlayAttackPulse` 후 투사체 발사 → 도착(`onArrive`) 시점에 기존 `PlayHitFX`/`PlayHitReaction`/`PlayDamageText`/`PlaySplashHits` 실행
 
 ### 가산점 (Task #8 이후)
 - [ ] FX/애니메이션 (DOTween, 공격/피격/사망 연출)
