@@ -5,7 +5,7 @@ public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance { get; private set; }
 
-    public event Action<CardInstance, CardInstance, Action> OnAttackPerformed;
+    public event Action<CardInstance, CardInstance, int, int, Action> OnAttackPerformed;
 
     private void Awake()
     {
@@ -32,7 +32,7 @@ public class BattleManager : MonoBehaviour
         }
 
         if (OnAttackPerformed != null)
-            OnAttackPerformed.Invoke(attacker, target, Resolve);
+            OnAttackPerformed.Invoke(attacker, target, damageDealt, damageReceived, Resolve);
         else
             Resolve();
     }

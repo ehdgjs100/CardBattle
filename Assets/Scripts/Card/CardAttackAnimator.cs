@@ -55,4 +55,16 @@ public class CardAttackAnimator : MonoBehaviour
         _rect.DOPunchScale(_originalScale * hitPunchScale, hitDuration, 1, 0.6f)
             .OnComplete(() => onComplete?.Invoke());
     }
+
+    public void PlaySpawnFromDeck(Vector3 originWorldPos, float duration = 0.35f)
+    {
+        _rect.DOKill();
+
+        Vector3 targetPos = _rect.position;
+        _rect.position = originWorldPos;
+        _rect.localScale = _originalScale * 0.5f;
+
+        _rect.DOMove(targetPos, duration).SetEase(Ease.OutBack);
+        _rect.DOScale(_originalScale, duration).SetEase(Ease.OutBack);
+    }
 }

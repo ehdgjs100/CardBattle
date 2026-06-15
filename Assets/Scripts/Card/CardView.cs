@@ -1,3 +1,5 @@
+using DamageNumbersPro;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +13,7 @@ public class CardView : MonoBehaviour
     [SerializeField] private HPText hpText;
     [SerializeField] private GameObject frontRoot;
     [SerializeField] private GameObject cardBack;
+    [SerializeField] private DamageNumber damageTextPrefab;
 
     public CardAttackAnimator AttackAnimator { get; private set; }
 
@@ -55,7 +58,23 @@ public class CardView : MonoBehaviour
         SpawnFX(_visual != null ? _visual.hitFXPrefab : null);
     }
 
+    public void PlayDamageText(int amount)
+    {
+        if (damageTextPrefab == null || amount <= 0)
+            return;
+
+        Vector3 position = transform.position + new Vector3(0.5f, 0.5f, FXDepthOffset);
+        DamageNumber popup = damageTextPrefab.Spawn(position, amount);
+        popup.UpdateText();
+
+        Vector3 risePosition = position + Vector3.up * DamageRiseDistance;
+        DOTween.To(() => popup.position, value => popup.position = value, risePosition, DamageRiseDuration)
+            .SetEase(Ease.OutQuad);
+    }
+
     private const float FXDepthOffset = -0.5f;
+    private const float DamageRiseDistance = 1f;
+    private const float DamageRiseDuration = 0.6f;
 
     private void SpawnFX(GameObject prefab)
     {

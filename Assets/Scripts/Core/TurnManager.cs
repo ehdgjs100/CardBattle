@@ -6,7 +6,7 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance { get; private set; }
 
-    [SerializeField] private float enemyTurnDelay = 0.3f;
+    [SerializeField] private float enemyTurnDelay = 0.6f;
 
     private CardField _playerField;
     private CardField _enemyField;

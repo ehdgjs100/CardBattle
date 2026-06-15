@@ -81,11 +81,21 @@ public class UIManager : MonoBehaviour
 
     private void RefreshField(BattleSlot[] slots, CardField field)
     {
+        WaitingCardCount waitingCount = field.Owner == Owner.Player ? playerWaitingCount : enemyWaitingCount;
+
         for (int i = 0; i < slots.Length; i++)
-            slots[i].Bind(field.Slots[i]);
+        {
+            CardInstance previous = slots[i].Card;
+            CardInstance next = field.Slots[i];
+
+            slots[i].Bind(next);
+
+            if (previous != null && previous != next && next != null && waitingCount != null)
+                slots[i].CardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position);
+        }
     }
 
-    private void HandleAttackPerformed(CardInstance attacker, CardInstance target, Action onAnimationComplete)
+    private void HandleAttackPerformed(CardInstance attacker, CardInstance target, int damageDealt, int damageReceived, Action onAnimationComplete)
     {
         BattleSlot attackerSlot = FindSlot(attacker);
         BattleSlot targetSlot = FindSlot(target);
@@ -110,6 +120,8 @@ public class UIManager : MonoBehaviour
                 {
                     targetSlot.CardView.PlayHitFX();
                     targetSlot.CardView.AttackAnimator.PlayHitReaction();
+                    targetSlot.CardView.PlayDamageText(damageDealt);
+                    attackerSlot.CardView.PlayDamageText(damageReceived);
                 },
                 onComplete: onAnimationComplete);
         }
@@ -118,6 +130,8 @@ public class UIManager : MonoBehaviour
             attackerSlot.CardView.AttackAnimator.PlayAttackPulse();
             targetSlot.CardView.PlayHitFX();
             targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
+            targetSlot.CardView.PlayDamageText(damageDealt);
+            attackerSlot.CardView.PlayDamageText(damageReceived);
         }
     }
 
