@@ -6,11 +6,12 @@ public class TurnManager : MonoBehaviour
 {
     public static TurnManager Instance { get; private set; }
 
-    [SerializeField] private float enemyTurnDelay = 0.6f;
+    [SerializeField] private float enemyTurnDelay = 0.9f;
 
     private CardField _playerField;
     private CardField _enemyField;
     private CardInstance _selectedAttacker;
+    private float _pendingSpawnDelay;
 
     public CardInstance SelectedAttacker => _selectedAttacker;
     public event Action OnSelectionChanged;
@@ -37,13 +38,21 @@ public class TurnManager : MonoBehaviour
 
         if (turnOwner == Owner.Player)
         {
+            _pendingSpawnDelay = 0f;
             GameManager.Instance.SetState(GameState.PlayerSelectCard);
         }
         else
         {
             GameManager.Instance.SetState(GameState.EnemyTurn);
-            DOVirtual.DelayedCall(enemyTurnDelay, RunEnemyTurn);
+            float delay = Mathf.Max(enemyTurnDelay, _pendingSpawnDelay);
+            _pendingSpawnDelay = 0f;
+            DOVirtual.DelayedCall(delay, RunEnemyTurn);
         }
+    }
+
+    public void NotifyCardSpawnAnimation(float duration)
+    {
+        _pendingSpawnDelay = Mathf.Max(_pendingSpawnDelay, duration);
     }
 
     public bool SelectAttacker(CardInstance card)

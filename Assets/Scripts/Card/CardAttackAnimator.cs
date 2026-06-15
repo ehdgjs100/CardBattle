@@ -56,7 +56,11 @@ public class CardAttackAnimator : MonoBehaviour
             .OnComplete(() => onComplete?.Invoke());
     }
 
-    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, float duration = 1f)
+    public const float SpawnDuration = 1f;
+    private const float DefaultBackOvershoot = 1.70158f;
+    private const float SpawnOvershoot = DefaultBackOvershoot * 0.5f;
+
+    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, float duration = SpawnDuration)
     {
         _rect.DOKill();
 
@@ -65,8 +69,8 @@ public class CardAttackAnimator : MonoBehaviour
         _rect.localScale = _originalScale * 0.5f;
         _rect.localRotation = Quaternion.identity;
 
-        _rect.DOMove(targetPos, duration).SetEase(Ease.OutBack);
-        _rect.DOScale(_originalScale, duration).SetEase(Ease.OutBack);
+        _rect.DOMove(targetPos, duration).SetEase(Ease.OutBack, SpawnOvershoot);
+        _rect.DOScale(_originalScale, duration).SetEase(Ease.OutBack, SpawnOvershoot);
 
         float flipDuration = duration * 0.5f;
         Sequence flip = DOTween.Sequence();
