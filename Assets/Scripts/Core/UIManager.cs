@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -108,10 +109,10 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void HandleAttackPerformed(CardInstance attacker, CardInstance target, int damageDealt, int damageReceived, Action onAnimationComplete)
+    private void HandleAttackPerformed(AttackResult result, Action onAnimationComplete)
     {
-        BattleSlot attackerSlot = FindSlot(attacker);
-        BattleSlot targetSlot = FindSlot(target);
+        BattleSlot attackerSlot = FindSlot(result.Attacker);
+        BattleSlot targetSlot = FindSlot(result.Target);
 
         if (attackerSlot == null || targetSlot == null)
         {
@@ -122,7 +123,7 @@ public class UIManager : MonoBehaviour
         attackerSlot.transform.SetAsLastSibling();
         attackerSlot.CardView.PlayAttackFX();
 
-        if (attacker.effect.IsMelee)
+        if (result.Attacker.effect.IsMelee)
         {
             Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
                 - ((RectTransform)attackerSlot.transform).anchoredPosition;
@@ -133,8 +134,10 @@ public class UIManager : MonoBehaviour
                 {
                     targetSlot.CardView.PlayHitFX();
                     targetSlot.CardView.AttackAnimator.PlayHitReaction();
-                    targetSlot.CardView.PlayDamageText(damageDealt);
-                    attackerSlot.CardView.PlayDamageText(damageReceived);
+                    targetSlot.CardView.PlayDamageText(result.DamageDealt);
+                    attackerSlot.CardView.PlayDamageText(result.DamageReceived);
+
+                    PlaySplashHits(result.SplashHits);
                 },
                 onComplete: onAnimationComplete);
         }
@@ -143,8 +146,24 @@ public class UIManager : MonoBehaviour
             attackerSlot.CardView.AttackAnimator.PlayAttackPulse();
             targetSlot.CardView.PlayHitFX();
             targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
-            targetSlot.CardView.PlayDamageText(damageDealt);
-            attackerSlot.CardView.PlayDamageText(damageReceived);
+            targetSlot.CardView.PlayDamageText(result.DamageDealt);
+            attackerSlot.CardView.PlayDamageText(result.DamageReceived);
+
+            PlaySplashHits(result.SplashHits);
+        }
+    }
+
+    private void PlaySplashHits(IReadOnlyList<SplashHit> splashHits)
+    {
+        for (int i = 0; i < splashHits.Count; i++)
+        {
+            BattleSlot slot = FindSlot(splashHits[i].Target);
+            if (slot == null)
+                continue;
+
+            slot.CardView.PlayHitFX();
+            slot.CardView.AttackAnimator.PlayHitReaction();
+            slot.CardView.PlayDamageText(splashHits[i].Damage);
         }
     }
 

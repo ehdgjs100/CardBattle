@@ -1,11 +1,12 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BattleManager : MonoBehaviour
 {
     public static BattleManager Instance { get; private set; }
 
-    public event Action<CardInstance, CardInstance, int, int, Action> OnAttackPerformed;
+    public event Action<AttackResult, Action> OnAttackPerformed;
 
     private void Awake()
     {
@@ -17,12 +18,27 @@ public class BattleManager : MonoBehaviour
         int attackerHPBefore = attacker.currentHP;
         int targetHPBefore = target.currentHP;
 
+        Dictionary<CardInstance, int> otherHPBefore = new Dictionary<CardInstance, int>();
+        foreach (CardInstance card in targetField.Slots)
+        {
+            if (card != null && card != target)
+                otherHPBefore[card] = card.currentHP;
+        }
+
         attacker.effect.Execute(attacker, target, targetField.Slots);
 
         int damageDealt = targetHPBefore - target.currentHP;
         int damageReceived = attackerHPBefore - attacker.currentHP;
         Debug.Log($"[Battle] {attacker.owner} {attacker.data.name}({attackerHPBefore}->{attacker.currentHP}) attacks " +
             $"{target.owner} {target.data.name}({targetHPBefore}->{target.currentHP}) : dealt {damageDealt}, received {damageReceived}");
+
+        List<SplashHit> splashHits = new List<SplashHit>();
+        foreach (KeyValuePair<CardInstance, int> entry in otherHPBefore)
+        {
+            int splashDamage = entry.Value - entry.Key.currentHP;
+            if (splashDamage > 0)
+                splashHits.Add(new SplashHit(entry.Key, splashDamage));
+        }
 
         void Resolve()
         {
@@ -31,8 +47,10 @@ public class BattleManager : MonoBehaviour
             onComplete?.Invoke();
         }
 
+        AttackResult result = new AttackResult(attacker, target, damageDealt, damageReceived, splashHits);
+
         if (OnAttackPerformed != null)
-            OnAttackPerformed.Invoke(attacker, target, damageDealt, damageReceived, Resolve);
+            OnAttackPerformed.Invoke(result, Resolve);
         else
             Resolve();
     }
