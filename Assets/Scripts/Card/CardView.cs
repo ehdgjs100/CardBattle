@@ -39,7 +39,6 @@ public class CardView : MonoBehaviour
 
         cardNameText.text = instance.data.cardName;
         hpText.Init(instance.data.maxHP, instance.currentHP);
-        SetFaceDown(false);
     }
 
     public void SetFaceDown(bool faceDown)

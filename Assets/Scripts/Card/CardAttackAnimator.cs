@@ -56,15 +56,22 @@ public class CardAttackAnimator : MonoBehaviour
             .OnComplete(() => onComplete?.Invoke());
     }
 
-    public void PlaySpawnFromDeck(Vector3 originWorldPos, float duration = 0.35f)
+    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, float duration = 1f)
     {
         _rect.DOKill();
 
         Vector3 targetPos = _rect.position;
         _rect.position = originWorldPos;
         _rect.localScale = _originalScale * 0.5f;
+        _rect.localRotation = Quaternion.identity;
 
         _rect.DOMove(targetPos, duration).SetEase(Ease.OutBack);
         _rect.DOScale(_originalScale, duration).SetEase(Ease.OutBack);
+
+        float flipDuration = duration * 0.5f;
+        Sequence flip = DOTween.Sequence();
+        flip.Append(_rect.DOLocalRotate(new Vector3(0f, 90f, 0f), flipDuration).SetEase(Ease.InQuad));
+        flip.AppendCallback(() => onFlip?.Invoke());
+        flip.Append(_rect.DOLocalRotate(Vector3.zero, flipDuration).SetEase(Ease.OutQuad));
     }
 }

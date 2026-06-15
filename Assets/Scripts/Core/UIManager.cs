@@ -90,8 +90,20 @@ public class UIManager : MonoBehaviour
 
             slots[i].Bind(next);
 
-            if (previous != null && previous != next && next != null && waitingCount != null)
-                slots[i].CardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position);
+            if (previous == next || next == null)
+                continue;
+
+            CardView cardView = slots[i].CardView;
+
+            if (previous != null && waitingCount != null)
+            {
+                cardView.SetFaceDown(true);
+                cardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position, () => cardView.SetFaceDown(false));
+            }
+            else
+            {
+                cardView.SetFaceDown(false);
+            }
         }
     }
 
