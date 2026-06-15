@@ -58,6 +58,7 @@
   <Project Path="Unity.RenderPipelines.Universal.2D.Editor.Overrides.csproj" />
   <Project Path="CFXREditor.csproj" />
   <Project Path="Unity.2D.Sprite.Editor.csproj" />
+  <Project Path="DamageNumbersPro.csproj" />
   <Project Path="Unity.Multiplayer.Center.Common.csproj" />
   <Project Path="Assembly-CSharp-firstpass.csproj" />
   <Project Path="Unity.InputSystem.ForUI.csproj" />

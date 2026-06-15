@@ -16,6 +16,6 @@ MonoBehaviour:
   typeIcon: {fileID: 21300000, guid: f08eeacd1788e7b4eb857a2844becb26, type: 3}
   frameColor: {r: 1, g: 1, b: 1, a: 1}
   animController: {fileID: 0}
-  attackFXPrefab: {fileID: 5880797563127281583, guid: caa9b79476e1ad447a8024014cc6924e, type: 3}
+  attackFXPrefab: {fileID: 0}
   hitFXPrefab: {fileID: 5880797563127281583, guid: caa9b79476e1ad447a8024014cc6924e, type: 3}
   deathFXPrefab: {fileID: 0}

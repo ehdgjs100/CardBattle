@@ -97,6 +97,7 @@ public class UIManager : MonoBehaviour
         }
 
         attackerSlot.transform.SetAsLastSibling();
+        attackerSlot.CardView.PlayAttackFX();
 
         if (attacker.effect.IsMelee)
         {
@@ -105,12 +106,17 @@ public class UIManager : MonoBehaviour
 
             attackerSlot.CardView.AttackAnimator.PlayMeleeAttack(
                 offset,
-                onImpact: () => targetSlot.CardView.AttackAnimator.PlayHitReaction(),
+                onImpact: () =>
+                {
+                    targetSlot.CardView.PlayHitFX();
+                    targetSlot.CardView.AttackAnimator.PlayHitReaction();
+                },
                 onComplete: onAnimationComplete);
         }
         else
         {
             attackerSlot.CardView.AttackAnimator.PlayAttackPulse();
+            targetSlot.CardView.PlayHitFX();
             targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
         }
     }

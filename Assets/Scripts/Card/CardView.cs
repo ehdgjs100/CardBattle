@@ -14,6 +14,8 @@ public class CardView : MonoBehaviour
 
     public CardAttackAnimator AttackAnimator { get; private set; }
 
+    private CardVisualConfig _visual;
+
     private void Awake()
     {
         AttackAnimator = GetComponent<CardAttackAnimator>();
@@ -22,6 +24,7 @@ public class CardView : MonoBehaviour
     public void Bind(CardInstance instance)
     {
         CardVisualConfig visual = instance.data.visual;
+        _visual = visual;
 
         if (visual != null)
         {
@@ -40,5 +43,26 @@ public class CardView : MonoBehaviour
     {
         frontRoot.SetActive(!faceDown);
         cardBack.SetActive(faceDown);
+    }
+
+    public void PlayAttackFX()
+    {
+        SpawnFX(_visual != null ? _visual.attackFXPrefab : null);
+    }
+
+    public void PlayHitFX()
+    {
+        SpawnFX(_visual != null ? _visual.hitFXPrefab : null);
+    }
+
+    private const float FXDepthOffset = -0.5f;
+
+    private void SpawnFX(GameObject prefab)
+    {
+        if (prefab == null)
+            return;
+
+        Vector3 position = transform.position + new Vector3(0f, 0f, FXDepthOffset);
+        Instantiate(prefab, position, Quaternion.identity);
     }
 }
