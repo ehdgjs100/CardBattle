@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class MusoEffect : CardEffect
 {
+    public override bool IsMelee => true;
+
     private readonly float _splashRatio;
 
     public MusoEffect(float splashRatio)

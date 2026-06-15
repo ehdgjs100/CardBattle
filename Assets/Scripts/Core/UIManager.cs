@@ -96,6 +96,8 @@ public class UIManager : MonoBehaviour
             return;
         }
 
+        attackerSlot.transform.SetAsLastSibling();
+
         if (attacker.effect.IsMelee)
         {
             Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
