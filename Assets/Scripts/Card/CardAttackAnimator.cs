@@ -56,6 +56,18 @@ public class CardAttackAnimator : MonoBehaviour
             .OnComplete(() => onComplete?.Invoke());
     }
 
+    public void PlayShake(System.Action onComplete = null)
+    {
+        _rect.DOKill();
+        _rect.anchoredPosition = _originalAnchoredPos;
+        _rect.DOShakeAnchorPos(0.4f, new Vector2(10f, 0f), 15, 0f)
+            .OnComplete(() =>
+            {
+                _rect.anchoredPosition = _originalAnchoredPos;
+                onComplete?.Invoke();
+            });
+    }
+
     public void PlayKnockback(float dirX)
     {
         const float dist = 45f;

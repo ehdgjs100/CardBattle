@@ -10,6 +10,7 @@ public class CardView : MonoBehaviour
     [SerializeField] private Image frameImage;
     [SerializeField] private Image typeIconImage;
     [SerializeField] private Image innerTypeIconImage;
+    [SerializeField] private Image rejectBorderImage;
     [SerializeField] private TMP_Text cardNameText;
     [SerializeField] private HPText hpText;
     [SerializeField] private GameObject frontRoot;
@@ -66,6 +67,18 @@ public class CardView : MonoBehaviour
 
         cardNameText.text = instance.data.cardName;
         hpText.Init(instance.data.maxHP, instance.currentHP);
+    }
+
+    public void PlayReject()
+    {
+        if (rejectBorderImage != null)
+            rejectBorderImage.gameObject.SetActive(true);
+
+        AttackAnimator.PlayShake(() =>
+        {
+            if (rejectBorderImage != null)
+                rejectBorderImage.gameObject.SetActive(false);
+        });
     }
 
     public void RefreshHP()

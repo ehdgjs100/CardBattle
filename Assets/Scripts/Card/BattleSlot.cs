@@ -60,8 +60,24 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
         GameState state = GameManager.Instance.CurrentState;
 
         if (Card.owner == Owner.Player && state == GameState.PlayerSelectCard)
+        {
+            if (Card.data.CardType == CardType.Tanker)
+            {
+                cardView.PlayReject();
+                return;
+            }
             TurnManager.Instance.SelectAttacker(Card);
+        }
         else if (Card.owner == Owner.Enemy && state == GameState.PlayerSelectCard)
+        {
+            if (TurnManager.Instance.SelectedAttacker != null &&
+                GameManager.Instance.EnemyField.HasActiveTanker() &&
+                Card.data.CardType != CardType.Tanker)
+            {
+                UIManager.Instance.PlayTankerBlockReject();
+                return;
+            }
             TurnManager.Instance.SelectTarget(Card);
+        }
     }
 }

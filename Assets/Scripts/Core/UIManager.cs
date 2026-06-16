@@ -298,6 +298,19 @@ public class UIManager : MonoBehaviour
         });
     }
 
+    public void PlayTankerBlockReject()
+    {
+        for (int i = 0; i < enemySlots.Length; i++)
+        {
+            CardInstance card = enemySlots[i].Card;
+            if (card != null && card.IsAlive && card.data.CardType == CardType.Tanker)
+            {
+                enemySlots[i].CardView.PlayReject();
+                return;
+            }
+        }
+    }
+
     public Sprite GetInnerTypeIcon(CardType type)
     {
         for (int i = 0; i < innerTypeIcons.Length; i++)
