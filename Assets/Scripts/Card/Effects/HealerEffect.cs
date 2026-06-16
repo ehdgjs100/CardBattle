@@ -26,7 +26,7 @@ public class HealerEffect : CardEffect
             if (card == null || card == self || !card.IsAlive)
                 continue;
 
-            card.Heal(_healAmount);
+            card.QueueHeal(_healAmount);
             healed = true;
         }
 

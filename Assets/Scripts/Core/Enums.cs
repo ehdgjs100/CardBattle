@@ -1,3 +1,11 @@
+public enum CardType
+{
+    Normal,
+    Ranged,
+    Muso,
+    Healer
+}
+
 public enum Owner
 {
     Player,

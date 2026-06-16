@@ -9,6 +9,7 @@ public class CardView : MonoBehaviour
     [SerializeField] private Image illustrationImage;
     [SerializeField] private Image frameImage;
     [SerializeField] private Image typeIconImage;
+    [SerializeField] private Image innerTypeIconImage;
     [SerializeField] private TMP_Text cardNameText;
     [SerializeField] private HPText hpText;
     [SerializeField] private GameObject frontRoot;
@@ -40,11 +41,7 @@ public class CardView : MonoBehaviour
 
     public void Bind(CardInstance instance)
     {
-        if (_boundInstance != null)
-            _boundInstance.OnHPChanged -= RefreshHP;
-
         _boundInstance = instance;
-        instance.OnHPChanged += RefreshHP;
 
         CanvasGroup cg = GetComponent<CanvasGroup>();
         if (cg != null && cg) cg.alpha = 1f;
@@ -60,13 +57,21 @@ public class CardView : MonoBehaviour
             typeIconImage.gameObject.SetActive(visual.typeIcon != null);
         }
 
+        if (innerTypeIconImage != null)
+        {
+            Sprite inner = UIManager.Instance.GetInnerTypeIcon(instance.data.CardType);
+            innerTypeIconImage.sprite = inner;
+            innerTypeIconImage.gameObject.SetActive(inner != null);
+        }
+
         cardNameText.text = instance.data.cardName;
         hpText.Init(instance.data.maxHP, instance.currentHP);
     }
 
-    private void RefreshHP()
+    public void RefreshHP()
     {
-        hpText.SetHP(_boundInstance.currentHP);
+        if (_boundInstance != null)
+            hpText.SetHP(_boundInstance.currentHP);
     }
 
     public void SetFaceDown(bool faceDown)
@@ -105,6 +110,8 @@ public class CardView : MonoBehaviour
 
         Vector3 position = transform.position + new Vector3(0.5f, -0.5f, FXDepthOffset);
         DamageNumber popup = healTextPrefab.Spawn(position, amount);
+        popup.enableLeftText = true;
+        popup.leftText = "+";
         popup.UpdateText();
 
         DOTween.To(() => popup.position, value => popup.position = value,

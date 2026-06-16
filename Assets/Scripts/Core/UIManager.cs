@@ -5,6 +5,13 @@ using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
+[Serializable]
+public struct CardTypeIconEntry
+{
+    public CardType type;
+    public Sprite sprite;
+}
+
 public class UIManager : MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -17,6 +24,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private ResultPanel resultPanel;
     [SerializeField] private TurnCoin turnCoin;
     [SerializeField] private GameObject healFXPrefab;
+    [SerializeField] private CardTypeIconEntry[] innerTypeIcons;
 
     private bool _hasDealtInitialCards;
     private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
@@ -105,7 +113,7 @@ public class UIManager : MonoBehaviour
             if (next != null && _healSubscribed.Add(next))
             {
                 CardInstance c = next;
-                next.OnHealed += amount => ShowHealFX(c, amount);
+                next.OnHealQueued += amount => ShowHealFX(c, amount);
                 next.OnHealCast += () => PlayHealCastAnimation(c);
             }
 
@@ -209,7 +217,9 @@ public class UIManager : MonoBehaviour
                 {
                     targetSlot.CardView.PlayHitFX(hitFX);
                     targetSlot.CardView.AttackAnimator.PlayHitReaction();
+                    targetSlot.CardView.RefreshHP();
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
+                    attackerSlot.CardView.RefreshHP();
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
 
                     PlaySplashHits(result.SplashHits, targetSlot, hitFX);
@@ -226,7 +236,9 @@ public class UIManager : MonoBehaviour
                 {
                     targetSlot.CardView.PlayHitFX(hitFX);
                     targetSlot.CardView.AttackAnimator.PlayHitReaction(onComplete);
+                    targetSlot.CardView.RefreshHP();
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
+                    attackerSlot.CardView.RefreshHP();
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
                     PlaySplashHits(result.SplashHits, targetSlot, hitFX);
                     playAttackerDeath?.Invoke();
@@ -248,6 +260,7 @@ public class UIManager : MonoBehaviour
             float dirX = Mathf.Sign(splashX - mainX);
 
             slot.CardView.PlayHitFX(hitFX);
+            slot.CardView.RefreshHP();
             slot.CardView.PlayDamageText(splashHits[i].Damage);
 
             if (!splashHits[i].Target.IsAlive)
@@ -262,12 +275,15 @@ public class UIManager : MonoBehaviour
         float delay = TurnManager.Instance.TurnStartVisualDelay;
         DOVirtual.DelayedCall(delay, () =>
         {
+            card.ApplyHeal(amount);
+
             BattleSlot slot = FindSlot(card);
             if (slot == null) return;
 
             if (healFXPrefab != null)
                 Instantiate(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
 
+            slot.CardView.RefreshHP();
             slot.CardView.PlayHealText(amount);
         });
     }
@@ -280,6 +296,14 @@ public class UIManager : MonoBehaviour
             BattleSlot slot = FindSlot(card);
             slot?.CardView.AttackAnimator.PlayAttackPulse();
         });
+    }
+
+    public Sprite GetInnerTypeIcon(CardType type)
+    {
+        for (int i = 0; i < innerTypeIcons.Length; i++)
+            if (innerTypeIcons[i].type == type)
+                return innerTypeIcons[i].sprite;
+        return null;
     }
 
     private BattleSlot FindSlot(CardInstance card)

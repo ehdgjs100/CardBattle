@@ -32,7 +32,10 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
         }
 
         if (emptyVisual != null)
-            emptyVisual.SetActive(false);
+        {
+            emptyVisual.SetActive(true);
+            emptyVisual.transform.SetAsFirstSibling();
+        }
 
         cardView.gameObject.SetActive(true);
         cardView.Bind(card);

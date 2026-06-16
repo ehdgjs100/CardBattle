@@ -7,5 +7,6 @@ public abstract class CardDataBase : ScriptableObject
     public string description;
     public CardVisualConfig visual;
 
+    public abstract CardType CardType { get; }
     public abstract CardEffect CreateEffect();
 }

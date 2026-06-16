@@ -3,9 +3,8 @@ using UnityEngine;
 
 public class CardInstance
 {
-    public event Action<int> OnHealed;
+    public event Action<int> OnHealQueued;
     public event Action OnHealCast;
-    public event Action OnHPChanged;
 
     public void RaiseHealCast() => OnHealCast?.Invoke();
     public CardDataBase data;
@@ -30,18 +29,17 @@ public class CardInstance
     public void TakeDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - amount);
-        OnHPChanged?.Invoke();
     }
 
-    public void Heal(int amount)
+    public void QueueHeal(int amount)
     {
-        int before = currentHP;
+        int actual = Mathf.Min(amount, data.maxHP - currentHP);
+        if (actual > 0)
+            OnHealQueued?.Invoke(actual);
+    }
+
+    public void ApplyHeal(int amount)
+    {
         currentHP = Mathf.Min(data.maxHP, currentHP + amount);
-        int healed = currentHP - before;
-        if (healed > 0)
-        {
-            OnHealed?.Invoke(healed);
-            OnHPChanged?.Invoke();
-        }
     }
 }
