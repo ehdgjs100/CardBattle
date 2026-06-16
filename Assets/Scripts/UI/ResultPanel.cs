@@ -20,8 +20,8 @@ public class ResultPanel : MonoBehaviour
     [SerializeField] private TMP_Text killCountText;
     [SerializeField] private TMP_Text turnCountText;
 
-    private static readonly Color WinBgColor = new Color(1f, 0.82f, 0.08f, 0.93f);
-    private static readonly Color LoseBgColor = new Color(0.08f, 0.08f, 0.1f, 0.9f);
+    [SerializeField] private Color winBgColor = new Color(0.06f, 0.06f, 0.08f, 0.9f);
+    [SerializeField] private Color loseBgColor = new Color(0.08f, 0.08f, 0.1f, 0.9f);
 
     private Vector2 _retryBtnOrigPos;
     private Vector2 _lobbyBtnOrigPos;
@@ -103,8 +103,8 @@ public class ResultPanel : MonoBehaviour
 
         if (panelBackground != null)
         {
-            panelBackground.color = new Color(WinBgColor.r, WinBgColor.g, WinBgColor.b, 0f);
-            panelBackground.DOFade(WinBgColor.a, 0.3f).SetDelay(0.1f);
+            panelBackground.color = new Color(winBgColor.r, winBgColor.g, winBgColor.b, 0f);
+            panelBackground.DOFade(winBgColor.a, 0.3f).SetDelay(0.1f);
         }
 
         if (winLetters != null)
@@ -150,8 +150,8 @@ public class ResultPanel : MonoBehaviour
 
         if (panelBackground != null)
         {
-            panelBackground.color = new Color(LoseBgColor.r, LoseBgColor.g, LoseBgColor.b, 0f);
-            panelBackground.DOFade(LoseBgColor.a, 0.6f).SetDelay(0.5f);
+            panelBackground.color = new Color(loseBgColor.r, loseBgColor.g, loseBgColor.b, 0f);
+            panelBackground.DOFade(loseBgColor.a, 0.6f).SetDelay(0.5f);
         }
 
         if (loseLetters != null)

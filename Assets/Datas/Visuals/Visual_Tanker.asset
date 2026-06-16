@@ -18,4 +18,7 @@ MonoBehaviour:
   animController: {fileID: 0}
   attackFXPrefab: {fileID: 0}
   hitFXPrefab: {fileID: 5880797563127281583, guid: caa9b79476e1ad447a8024014cc6924e, type: 3}
-  deathFXPrefab: {fileID: 0}
+  receivedHitFXPrefab: {fileID: 180820, guid: 3b1708f770beb6b40b24c494d830a55c, type: 3}
+  receivedHitFXOffset: {x: 0, y: -1.4}
+  receivedHitFXRotation: {x: -90, y: 0, z: 0}
+  deathFXPrefab: {fileID: 130332, guid: bd7633043bfcfaf429a4198815fd1630, type: 3}

@@ -26,9 +26,11 @@ public class UIManager : MonoBehaviour
     [SerializeField] private GameObject healFXPrefab;
     [SerializeField] private CardTypeIconEntry[] innerTypeIcons;
     [SerializeField] private TMP_Text turnCountText;
+    [SerializeField] private RectTransform turnPanel;
 
     private bool _hasDealtInitialCards;
     private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
+    private Vector3 _turnTextOrigLocalPos;
 
     private void Awake()
     {
@@ -40,6 +42,40 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnStateChanged += HandleStateChanged;
         TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
         BattleManager.Instance.OnAttackPerformed += HandleAttackPerformed;
+
+        if (turnCountText != null)
+            _turnTextOrigLocalPos = turnCountText.transform.localPosition;
+    }
+
+    private void Start()
+    {
+        PlayIntroAnimations();
+    }
+
+    private void PlayIntroAnimations()
+    {
+        if (turnPanel != null)
+        {
+            Vector2 orig = turnPanel.anchoredPosition;
+            turnPanel.anchoredPosition = orig + Vector2.up * 600f;
+            turnPanel.DOAnchorPos(orig, 1.0f).SetEase(Ease.OutCubic);
+        }
+
+        if (playerWaitingCount != null)
+        {
+            var rt = (RectTransform)playerWaitingCount.transform;
+            Vector2 orig = rt.anchoredPosition;
+            rt.anchoredPosition = orig + Vector2.down * 900f;
+            rt.DOAnchorPos(orig, 0.4f).SetEase(Ease.OutBack, 1.4f).SetDelay(0.15f);
+        }
+
+        if (enemyWaitingCount != null)
+        {
+            var rt = (RectTransform)enemyWaitingCount.transform;
+            Vector2 orig = rt.anchoredPosition;
+            rt.anchoredPosition = orig + Vector2.up * 900f;
+            rt.DOAnchorPos(orig, 0.4f).SetEase(Ease.OutBack, 1.4f).SetDelay(0.15f);
+        }
     }
 
     private void SpawnCardViews(BattleSlot[] slots)
@@ -84,7 +120,7 @@ public class UIManager : MonoBehaviour
         switch (state)
         {
             case GameState.PlayerSelectCard:
-                turnCountText?.SetText("턴 " + TurnManager.Instance.TurnNumber.ToString());
+                PlayTurnTextChange(TurnManager.Instance.TurnNumber);
                 break;
             case GameState.Win:
                 resultPanel?.Show(GameResult.Win, BattleManager.Instance.TotalKills, TurnManager.Instance.TurnNumber);
@@ -219,6 +255,7 @@ public class UIManager : MonoBehaviour
                 onImpact: () =>
                 {
                     targetSlot.CardView.PlayHitFX(hitFX);
+                    targetSlot.CardView.PlayReceivedHitFX();
                     targetSlot.CardView.AttackAnimator.PlayHitReaction();
                     targetSlot.CardView.RefreshHP();
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
@@ -238,6 +275,7 @@ public class UIManager : MonoBehaviour
                 onArrive: () =>
                 {
                     targetSlot.CardView.PlayHitFX(hitFX);
+                    targetSlot.CardView.PlayReceivedHitFX();
                     targetSlot.CardView.AttackAnimator.PlayHitReaction(onComplete);
                     targetSlot.CardView.RefreshHP();
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
@@ -263,6 +301,7 @@ public class UIManager : MonoBehaviour
             float dirX = Mathf.Sign(splashX - mainX);
 
             slot.CardView.PlayHitFX(hitFX);
+            slot.CardView.PlayReceivedHitFX();
             slot.CardView.RefreshHP();
             slot.CardView.PlayDamageText(splashHits[i].Damage);
 
@@ -298,6 +337,20 @@ public class UIManager : MonoBehaviour
         {
             BattleSlot slot = FindSlot(card);
             slot?.CardView.AttackAnimator.PlayAttackPulse();
+        });
+    }
+
+    private void PlayTurnTextChange(int turnNumber)
+    {
+        if (turnCountText == null) return;
+
+        turnCountText.transform.DOKill();
+        turnCountText.transform.DOScale(Vector3.zero, 0.15f).SetEase(Ease.InQuad).OnComplete(() =>
+        {
+            turnCountText.SetText("턴 " + turnNumber);
+            turnCountText.transform.localScale = Vector3.one;
+            turnCountText.transform.localPosition = _turnTextOrigLocalPos + new Vector3(0f, 80f, 0f);
+            turnCountText.transform.DOLocalMoveY(_turnTextOrigLocalPos.y, 0.45f).SetEase(Ease.OutCubic);
         });
     }
 

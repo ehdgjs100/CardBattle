@@ -2,16 +2,19 @@ using DamageNumbersPro;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour
+public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Image illustrationImage;
     [SerializeField] private Image frameImage;
+    [SerializeField] private Image frameOutline;
     [SerializeField] private Image typeIconImage;
     [SerializeField] private Image innerTypeIconImage;
     [SerializeField] private Image rejectBorderImage;
     [SerializeField] private TMP_Text cardNameText;
+    [SerializeField] private TMP_Text cardDescText;
     [SerializeField] private HPText hpText;
     [SerializeField] private GameObject frontRoot;
     [SerializeField] private GameObject cardBack;
@@ -30,14 +33,31 @@ public class CardView : MonoBehaviour
     {
         AttackAnimator = GetComponent<CardAttackAnimator>();
         DeathAnimator = GetComponent<CardDeathAnimator>();
+
+        if (frameOutline != null)
+            frameOutline.transform.DOLocalRotate(new Vector3(0f, 0f, -360f), 10f, RotateMode.FastBeyond360)
+                .SetLoops(-1, LoopType.Restart)
+                .SetEase(Ease.Linear);
     }
 
     public void PlayDeath(System.Action onComplete)
     {
+        SpawnDeathFX();
         if (DeathAnimator != null)
             DeathAnimator.Play(onComplete);
         else
             onComplete?.Invoke();
+    }
+
+    private void SpawnDeathFX()
+    {
+        if (_visual == null || _visual.deathFXPrefab == null) return;
+
+        Vector3 position = transform.position + new Vector3(0f, 0f, FXDepthOffset);
+        GameObject fx = Instantiate(_visual.deathFXPrefab, position, Quaternion.identity);
+
+        foreach (Renderer r in fx.GetComponentsInChildren<Renderer>(true))
+            r.sortingOrder = 100;
     }
 
     public void Bind(CardInstance instance)
@@ -66,6 +86,8 @@ public class CardView : MonoBehaviour
         }
 
         cardNameText.text = instance.data.cardName;
+        if (cardDescText != null)
+            cardDescText.text = instance.data.feature;
         hpText.Init(instance.data.maxHP, instance.currentHP);
     }
 
@@ -101,6 +123,17 @@ public class CardView : MonoBehaviour
     public void PlayHitFX(GameObject prefab)
     {
         SpawnFX(prefab);
+    }
+
+    public void PlayReceivedHitFX()
+    {
+        if (_visual == null || _visual.receivedHitFXPrefab == null)
+            return;
+
+        Vector2 offset = _visual.receivedHitFXOffset;
+        Vector3 position = transform.position + new Vector3(offset.x, offset.y, FXDepthOffset);
+        Quaternion rotation = Quaternion.Euler(_visual.receivedHitFXRotation);
+        Instantiate(_visual.receivedHitFXPrefab, position, rotation);
     }
 
     public void PlayDamageText(int amount)
@@ -142,6 +175,17 @@ public class CardView : MonoBehaviour
         Vector3 from = transform.position + new Vector3(0f, 0f, FXDepthOffset);
         Vector3 to = targetWorldPos + new Vector3(0f, 0f, FXDepthOffset);
         Instantiate(projectilePrefab, from, Quaternion.identity).Launch(from, to, onArrive);
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        if (_boundInstance == null) return;
+        FloatingDesc.Instance?.Show(_boundInstance.data.feature, _boundInstance.data.description);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        FloatingDesc.Instance?.Hide();
     }
 
     private const float FXDepthOffset = -0.5f;
