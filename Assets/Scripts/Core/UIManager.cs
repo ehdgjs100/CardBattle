@@ -2,9 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 [Serializable]
 public struct CardTypeIconEntry
@@ -26,7 +25,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TurnCoin turnCoin;
     [SerializeField] private GameObject healFXPrefab;
     [SerializeField] private CardTypeIconEntry[] innerTypeIcons;
-    [SerializeField] private Button retryButton;
+    [SerializeField] private TMP_Text turnCountText;
 
     private bool _hasDealtInitialCards;
     private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
@@ -41,8 +40,6 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnStateChanged += HandleStateChanged;
         TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
         BattleManager.Instance.OnAttackPerformed += HandleAttackPerformed;
-
-        retryButton?.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().name));
     }
 
     private void SpawnCardViews(BattleSlot[] slots)
@@ -86,9 +83,14 @@ public class UIManager : MonoBehaviour
 
         switch (state)
         {
+            case GameState.PlayerSelectCard:
+                turnCountText?.SetText("턴 " + TurnManager.Instance.TurnNumber.ToString());
+                break;
             case GameState.Win:
+                resultPanel?.Show(GameResult.Win, BattleManager.Instance.TotalKills, TurnManager.Instance.TurnNumber);
+                break;
             case GameState.Lose:
-                resultPanel?.Show(state == GameState.Win ? GameResult.Win : GameResult.Lose);
+                resultPanel?.Show(GameResult.Lose, BattleManager.Instance.TotalKills, TurnManager.Instance.TurnNumber);
                 break;
         }
 
@@ -200,13 +202,10 @@ public class UIManager : MonoBehaviour
             if (attackerDied) playAttackerDeath = () => attackerSlot.CardView.PlayDeath(onOne);
         }
 
-        // onComplete fires when attack animation ends:
-        // - target death starts here (after attacker returns)
-        // - attacker death starts at onImpact/onArrive so don't double-fire original
         if (targetDied)
             onComplete = playTargetDeath;
         else if (attackerDied)
-            onComplete = () => { }; // attacker death handles original via onOne
+            onComplete = () => { };
 
         GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
 

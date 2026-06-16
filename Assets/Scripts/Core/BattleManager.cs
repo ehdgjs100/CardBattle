@@ -7,6 +7,7 @@ public class BattleManager : MonoBehaviour
     public static BattleManager Instance { get; private set; }
 
     public event Action<AttackResult, Action> OnAttackPerformed;
+    public int TotalKills { get; private set; }
 
     private void Awake()
     {
@@ -29,8 +30,6 @@ public class BattleManager : MonoBehaviour
 
         int damageDealt = targetHPBefore - target.currentHP;
         int damageReceived = attackerHPBefore - attacker.currentHP;
-        Debug.Log($"[Battle] {attacker.owner} {attacker.data.name}({attackerHPBefore}->{attacker.currentHP}) attacks " +
-            $"{target.owner} {target.data.name}({targetHPBefore}->{target.currentHP}) : dealt {damageDealt}, received {damageReceived}");
 
         List<SplashHit> splashHits = new List<SplashHit>();
         foreach (KeyValuePair<CardInstance, int> entry in otherHPBefore)
@@ -38,6 +37,14 @@ public class BattleManager : MonoBehaviour
             int splashDamage = entry.Value - entry.Key.currentHP;
             if (splashDamage > 0)
                 splashHits.Add(new SplashHit(entry.Key, splashDamage));
+        }
+
+        if (attacker.owner == Owner.Player)
+        {
+            if (!target.IsAlive) TotalKills++;
+            for (int i = 0; i < splashHits.Count; i++)
+                if (!splashHits[i].Target.IsAlive)
+                    TotalKills++;
         }
 
         void Resolve()

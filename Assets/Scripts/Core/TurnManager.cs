@@ -19,6 +19,7 @@ public class TurnManager : MonoBehaviour
     public float EnemyTurnDelay => enemyTurnDelay;
     public float TurnStartVisualDelay => (turnCoin != null ? turnCoin.Duration : 0f) + afterCoinDelay;
     public CardInstance SelectedAttacker => _selectedAttacker;
+    public int TurnNumber { get; private set; }
     public event Action OnSelectionChanged;
 
     private void Awake()
@@ -37,6 +38,9 @@ public class TurnManager : MonoBehaviour
     {
         _selectedAttacker = null;
         OnSelectionChanged?.Invoke();
+
+        if (turnOwner == Owner.Player)
+            TurnNumber++;
 
         CardField allyField = turnOwner == Owner.Player ? _playerField : _enemyField;
         TriggerTurnStartEffects(allyField);
