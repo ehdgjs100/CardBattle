@@ -17,6 +17,7 @@ public class CardView : MonoBehaviour
     [SerializeField] private Projectile projectilePrefab;
 
     public CardAttackAnimator AttackAnimator { get; private set; }
+    public GameObject HitFXPrefab => _visual != null ? _visual.hitFXPrefab : null;
 
     private CardVisualConfig _visual;
 
@@ -53,9 +54,9 @@ public class CardView : MonoBehaviour
         SpawnFX(_visual != null ? _visual.attackFXPrefab : null);
     }
 
-    public void PlayHitFX()
+    public void PlayHitFX(GameObject prefab)
     {
-        SpawnFX(_visual != null ? _visual.hitFXPrefab : null);
+        SpawnFX(prefab);
     }
 
     public void PlayDamageText(int amount)

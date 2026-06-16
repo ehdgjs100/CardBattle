@@ -67,7 +67,7 @@ public class TurnManager : MonoBehaviour
         if (card == null || card.owner != Owner.Player || !card.IsAlive)
             return false;
 
-        _selectedAttacker = card;
+        _selectedAttacker = _selectedAttacker == card ? null : card;
         OnSelectionChanged?.Invoke();
         return true;
     }

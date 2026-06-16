@@ -162,6 +162,8 @@ public class UIManager : MonoBehaviour
             onAnimationComplete?.Invoke();
         };
 
+        GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
+
         if (result.Attacker.effect.IsMelee)
         {
             Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
@@ -171,12 +173,12 @@ public class UIManager : MonoBehaviour
                 offset,
                 onImpact: () =>
                 {
-                    targetSlot.CardView.PlayHitFX();
+                    targetSlot.CardView.PlayHitFX(hitFX);
                     targetSlot.CardView.AttackAnimator.PlayHitReaction();
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
 
-                    PlaySplashHits(result.SplashHits, targetSlot);
+                    PlaySplashHits(result.SplashHits, targetSlot, hitFX);
                 },
                 onComplete: onComplete);
         }
@@ -187,16 +189,16 @@ public class UIManager : MonoBehaviour
                 targetSlot.transform.position,
                 onArrive: () =>
                 {
-                    targetSlot.CardView.PlayHitFX();
+                    targetSlot.CardView.PlayHitFX(hitFX);
                     targetSlot.CardView.AttackAnimator.PlayHitReaction(onComplete);
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
-                    PlaySplashHits(result.SplashHits, targetSlot);
+                    PlaySplashHits(result.SplashHits, targetSlot, hitFX);
                 });
         }
     }
 
-    private void PlaySplashHits(IReadOnlyList<SplashHit> splashHits, BattleSlot mainTargetSlot)
+    private void PlaySplashHits(IReadOnlyList<SplashHit> splashHits, BattleSlot mainTargetSlot, GameObject hitFX)
     {
         float mainX = ((RectTransform)mainTargetSlot.transform).anchoredPosition.x;
 
@@ -209,7 +211,7 @@ public class UIManager : MonoBehaviour
             float splashX = ((RectTransform)slot.transform).anchoredPosition.x;
             float dirX = Mathf.Sign(splashX - mainX);
 
-            slot.CardView.PlayHitFX();
+            slot.CardView.PlayHitFX(hitFX);
             slot.CardView.AttackAnimator.PlayKnockback(dirX);
             slot.CardView.PlayDamageText(splashHits[i].Damage);
         }

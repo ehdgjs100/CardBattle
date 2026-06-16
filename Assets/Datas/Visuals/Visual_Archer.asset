@@ -17,5 +17,5 @@ MonoBehaviour:
   frameColor: {r: 1, g: 1, b: 1, a: 1}
   animController: {fileID: 0}
   attackFXPrefab: {fileID: 0}
-  hitFXPrefab: {fileID: 5880797563127281583, guid: caa9b79476e1ad447a8024014cc6924e, type: 3}
+  hitFXPrefab: {fileID: 4553287630450876385, guid: 12df76219096e2546ba091c66c5a1b47, type: 3}
   deathFXPrefab: {fileID: 0}
