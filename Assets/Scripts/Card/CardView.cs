@@ -14,6 +14,7 @@ public class CardView : MonoBehaviour
     [SerializeField] private GameObject frontRoot;
     [SerializeField] private GameObject cardBack;
     [SerializeField] private DamageNumber damageTextPrefab;
+    [SerializeField] private Projectile projectilePrefab;
 
     public CardAttackAnimator AttackAnimator { get; private set; }
 
@@ -69,6 +70,19 @@ public class CardView : MonoBehaviour
         Vector3 risePosition = position + Vector3.up * DamageRiseDistance;
         DOTween.To(() => popup.position, value => popup.position = value, risePosition, DamageRiseDuration)
             .SetEase(Ease.OutQuad);
+    }
+
+    public void PlayProjectile(Vector3 targetWorldPos, System.Action onArrive)
+    {
+        if (projectilePrefab == null)
+        {
+            onArrive?.Invoke();
+            return;
+        }
+
+        Vector3 from = transform.position + new Vector3(0f, 0f, FXDepthOffset);
+        Vector3 to = targetWorldPos + new Vector3(0f, 0f, FXDepthOffset);
+        Instantiate(projectilePrefab, from, Quaternion.identity).Launch(from, to, onArrive);
     }
 
     private const float FXDepthOffset = -0.5f;

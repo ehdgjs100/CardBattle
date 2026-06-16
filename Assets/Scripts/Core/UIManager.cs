@@ -144,12 +144,16 @@ public class UIManager : MonoBehaviour
         else
         {
             attackerSlot.CardView.AttackAnimator.PlayAttackPulse();
-            targetSlot.CardView.PlayHitFX();
-            targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
-            targetSlot.CardView.PlayDamageText(result.DamageDealt);
-            attackerSlot.CardView.PlayDamageText(result.DamageReceived);
-
-            PlaySplashHits(result.SplashHits);
+            attackerSlot.CardView.PlayProjectile(
+                targetSlot.transform.position,
+                onArrive: () =>
+                {
+                    targetSlot.CardView.PlayHitFX();
+                    targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
+                    targetSlot.CardView.PlayDamageText(result.DamageDealt);
+                    attackerSlot.CardView.PlayDamageText(result.DamageReceived);
+                    PlaySplashHits(result.SplashHits);
+                });
         }
     }
 
