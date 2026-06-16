@@ -56,6 +56,20 @@ public class CardAttackAnimator : MonoBehaviour
             .OnComplete(() => onComplete?.Invoke());
     }
 
+    public void PlayKnockback(float dirX)
+    {
+        const float dist = 45f;
+        const float outDur = 0.08f;
+        const float backDur = 0.22f;
+
+        Vector2 pushed = _originalAnchoredPos + new Vector2(dirX * dist, 0f);
+
+        DOTween.Sequence()
+            .SetTarget(_rect)
+            .Append(_rect.DOAnchorPos(pushed, outDur).SetEase(Ease.OutQuad))
+            .Append(_rect.DOAnchorPos(_originalAnchoredPos, backDur).SetEase(Ease.OutBack));
+    }
+
     public const float SpawnDuration = 1f;
     private const float DefaultBackOvershoot = 1.70158f;
     private const float SpawnOvershoot = DefaultBackOvershoot * 0.5f;

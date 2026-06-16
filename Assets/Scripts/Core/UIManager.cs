@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
@@ -12,8 +13,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private CardView cardViewPrefab;
     [SerializeField] private WaitingCardCount playerWaitingCount;
     [SerializeField] private WaitingCardCount enemyWaitingCount;
-    [SerializeField] private TurnBanner turnBanner;
     [SerializeField] private ResultPanel resultPanel;
+    [SerializeField] private TurnCoin turnCoin;
 
     private bool _hasDealtInitialCards;
 
@@ -61,11 +62,8 @@ public class UIManager : MonoBehaviour
 
         if (isFirstDeal)
         {
-            DOVirtual.DelayedCall(0f, () =>
-            {
-                DealCardsSequentially(playerSlots, playerWaitingCount, 0);
-                DealCardsSequentially(enemySlots, enemyWaitingCount, 0);
-            });
+            StartCoroutine(DealCoroutine(playerSlots, playerWaitingCount));
+            StartCoroutine(DealCoroutine(enemySlots, enemyWaitingCount));
         }
 
         playerWaitingCount?.SetCount(GameManager.Instance.PlayerField.WaitingCount);
@@ -73,12 +71,6 @@ public class UIManager : MonoBehaviour
 
         switch (state)
         {
-            case GameState.PlayerSelectCard:
-                turnBanner?.Show("플레이어 턴");
-                break;
-            case GameState.EnemyTurn:
-                turnBanner?.Show("적 턴");
-                break;
             case GameState.Win:
             case GameState.Lose:
                 resultPanel?.Show(state == GameState.Win ? GameResult.Win : GameResult.Lose);
@@ -129,26 +121,25 @@ public class UIManager : MonoBehaviour
         }
     }
 
-    private void DealCardsSequentially(BattleSlot[] slots, WaitingCardCount deckSource, int index)
+    private IEnumerator DealCoroutine(BattleSlot[] slots, WaitingCardCount deckSource)
     {
-        if (index >= slots.Length) return;
+        yield return null;
 
-        BattleSlot slot = slots[index];
-        if (slot.Card == null)
-        {
-            DealCardsSequentially(slots, deckSource, index + 1);
-            return;
-        }
-
+        float stagger = TurnManager.Instance.EnemyTurnDelay;
         Vector3 deckPos = deckSource != null ? deckSource.transform.position : Vector3.zero;
-        CardView cardView = slot.CardView;
 
-        cardView.gameObject.SetActive(true);
-        cardView.SetFaceDown(true);
-        cardView.AttackAnimator.PlaySpawnFromDeck(deckPos, onFlip: () => cardView.SetFaceDown(false));
+        for (int i = 0; i < slots.Length; i++)
+        {
+            if (slots[i].Card == null) continue;
 
-        DOVirtual.DelayedCall(TurnManager.Instance.EnemyTurnDelay,
-            () => DealCardsSequentially(slots, deckSource, index + 1));
+            CardView cardView = slots[i].CardView;
+            cardView.gameObject.SetActive(true);
+            cardView.SetFaceDown(true);
+            cardView.AttackAnimator.PlaySpawnFromDeck(deckPos, onFlip: () => cardView.SetFaceDown(false));
+
+            if (i < slots.Length - 1)
+                yield return new WaitForSeconds(stagger);
+        }
     }
 
     private void HandleAttackPerformed(AttackResult result, Action onAnimationComplete)
@@ -165,6 +156,12 @@ public class UIManager : MonoBehaviour
         attackerSlot.transform.SetAsLastSibling();
         attackerSlot.CardView.PlayAttackFX();
 
+        Action onComplete = () =>
+        {
+            turnCoin?.transform.SetAsLastSibling();
+            onAnimationComplete?.Invoke();
+        };
+
         if (result.Attacker.effect.IsMelee)
         {
             Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
@@ -179,9 +176,9 @@ public class UIManager : MonoBehaviour
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
 
-                    PlaySplashHits(result.SplashHits);
+                    PlaySplashHits(result.SplashHits, targetSlot);
                 },
-                onComplete: onAnimationComplete);
+                onComplete: onComplete);
         }
         else
         {
@@ -191,24 +188,29 @@ public class UIManager : MonoBehaviour
                 onArrive: () =>
                 {
                     targetSlot.CardView.PlayHitFX();
-                    targetSlot.CardView.AttackAnimator.PlayHitReaction(onAnimationComplete);
+                    targetSlot.CardView.AttackAnimator.PlayHitReaction(onComplete);
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
-                    PlaySplashHits(result.SplashHits);
+                    PlaySplashHits(result.SplashHits, targetSlot);
                 });
         }
     }
 
-    private void PlaySplashHits(IReadOnlyList<SplashHit> splashHits)
+    private void PlaySplashHits(IReadOnlyList<SplashHit> splashHits, BattleSlot mainTargetSlot)
     {
+        float mainX = ((RectTransform)mainTargetSlot.transform).anchoredPosition.x;
+
         for (int i = 0; i < splashHits.Count; i++)
         {
             BattleSlot slot = FindSlot(splashHits[i].Target);
             if (slot == null)
                 continue;
 
+            float splashX = ((RectTransform)slot.transform).anchoredPosition.x;
+            float dirX = Mathf.Sign(splashX - mainX);
+
             slot.CardView.PlayHitFX();
-            slot.CardView.AttackAnimator.PlayHitReaction();
+            slot.CardView.AttackAnimator.PlayKnockback(dirX);
             slot.CardView.PlayDamageText(splashHits[i].Damage);
         }
     }
