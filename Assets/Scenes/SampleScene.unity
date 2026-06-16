@@ -1559,7 +1559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerDeck:
-  - {fileID: 11400000, guid: 3de1d9a28847f8241ab88800573c2a2e, type: 2}
+  - {fileID: 11400000, guid: 0521d2657e3289443a8d8d68144fbd28, type: 2}
   - {fileID: 11400000, guid: 01550a32099963f41b48017d80a1ef1e, type: 2}
   - {fileID: 11400000, guid: f4e20f148661cad4eb934bb4ef151ef8, type: 2}
   - {fileID: 11400000, guid: b401f2b04c9a73745ac558400b01bfb1, type: 2}
@@ -1567,7 +1567,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 01550a32099963f41b48017d80a1ef1e, type: 2}
   enemyDeck:
   - {fileID: 11400000, guid: 01550a32099963f41b48017d80a1ef1e, type: 2}
-  - {fileID: 11400000, guid: 3de1d9a28847f8241ab88800573c2a2e, type: 2}
+  - {fileID: 11400000, guid: 0521d2657e3289443a8d8d68144fbd28, type: 2}
   - {fileID: 11400000, guid: b401f2b04c9a73745ac558400b01bfb1, type: 2}
   - {fileID: 11400000, guid: f4e20f148661cad4eb934bb4ef151ef8, type: 2}
   - {fileID: 11400000, guid: 3de1d9a28847f8241ab88800573c2a2e, type: 2}
@@ -4085,6 +4085,8 @@ MonoBehaviour:
     sprite: {fileID: -8392479370330828600, guid: d46d9696061c991428bbe9f78fac68f7, type: 3}
   - type: 3
     sprite: {fileID: -3967157022373004533, guid: d46d9696061c991428bbe9f78fac68f7, type: 3}
+  - type: 4
+    sprite: {fileID: -7252926235825015981, guid: d46d9696061c991428bbe9f78fac68f7, type: 3}
 --- !u!4 &2053393946
 Transform:
   m_ObjectHideFlags: 0

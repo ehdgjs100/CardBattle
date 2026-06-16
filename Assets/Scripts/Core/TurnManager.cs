@@ -69,6 +69,9 @@ public class TurnManager : MonoBehaviour
         if (card == null || card.owner != Owner.Player || !card.IsAlive)
             return false;
 
+        if (card.data.CardType == CardType.Tanker)
+            return false;
+
         _selectedAttacker = _selectedAttacker == card ? null : card;
         OnSelectionChanged?.Invoke();
         return true;
@@ -83,6 +86,9 @@ public class TurnManager : MonoBehaviour
             return false;
 
         if (target == null || target.owner != Owner.Enemy || !target.IsAlive)
+            return false;
+
+        if (_enemyField.HasActiveTanker() && target.data.CardType != CardType.Tanker)
             return false;
 
         GameManager.Instance.SetState(GameState.ApplyEffect);

@@ -3,7 +3,8 @@ public enum CardType
     Normal,
     Ranged,
     Muso,
-    Healer
+    Healer,
+    Tanker
 }
 
 public enum Owner

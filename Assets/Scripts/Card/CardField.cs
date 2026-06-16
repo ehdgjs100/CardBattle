@@ -32,6 +32,16 @@ public class CardField
         }
     }
 
+    public bool HasActiveTanker()
+    {
+        for (int i = 0; i < SlotCount; i++)
+        {
+            if (Slots[i] != null && Slots[i].IsAlive && Slots[i].data.CardType == CardType.Tanker)
+                return true;
+        }
+        return false;
+    }
+
     public bool IsDefeated()
     {
         if (_waitingCards.Count > 0)

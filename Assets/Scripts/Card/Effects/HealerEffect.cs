@@ -15,7 +15,8 @@ public class HealerEffect : CardEffect
     {
         int counterDamage = primaryTarget.currentHP;
         primaryTarget.TakeDamage(attacker.currentHP);
-        attacker.TakeDamage(counterDamage);
+        if (primaryTarget.effect.DealsCounterDamage)
+            attacker.TakeDamage(counterDamage);
     }
 
     public override void OnTurnStart(CardInstance self, IReadOnlyList<CardInstance> allyField)

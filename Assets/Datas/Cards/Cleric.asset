@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53abff370c446f644a263f9e3e664771, type: 3}
-  m_Name: Healer_Cleric
+  m_Name: Cleric
   m_EditorClassIdentifier: Assembly-CSharp::HealerCardData
   cardName: "\uC131\uC9C1\uC790"
   maxHP: 6
