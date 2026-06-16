@@ -175,21 +175,26 @@ public class UIManager : MonoBehaviour
         bool targetDied = !result.Target.IsAlive;
         bool attackerDied = !result.Attacker.IsAlive;
 
+        Action original = onComplete;
+        Action playTargetDeath = null;
+        Action playAttackerDeath = null;
+
         if (targetDied || attackerDied)
         {
-            CardView targetView = targetSlot.CardView;
-            CardView attackerView = attackerSlot.CardView;
-            Action original = onComplete;
+            int remaining = (targetDied ? 1 : 0) + (attackerDied ? 1 : 0);
+            Action onOne = () => { if (--remaining == 0) original?.Invoke(); };
 
-            onComplete = () =>
-            {
-                int remaining = (targetDied ? 1 : 0) + (attackerDied ? 1 : 0);
-                Action onOne = () => { if (--remaining == 0) original?.Invoke(); };
-
-                if (targetDied) targetView.PlayDeath(onOne);
-                if (attackerDied) attackerView.PlayDeath(onOne);
-            };
+            if (targetDied) playTargetDeath = () => targetSlot.CardView.PlayDeath(onOne);
+            if (attackerDied) playAttackerDeath = () => attackerSlot.CardView.PlayDeath(onOne);
         }
+
+        // onComplete fires when attack animation ends:
+        // - target death starts here (after attacker returns)
+        // - attacker death starts at onImpact/onArrive so don't double-fire original
+        if (targetDied)
+            onComplete = playTargetDeath;
+        else if (attackerDied)
+            onComplete = () => { }; // attacker death handles original via onOne
 
         GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
 
@@ -208,6 +213,7 @@ public class UIManager : MonoBehaviour
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
 
                     PlaySplashHits(result.SplashHits, targetSlot, hitFX);
+                    playAttackerDeath?.Invoke();
                 },
                 onComplete: onComplete);
         }
@@ -223,6 +229,7 @@ public class UIManager : MonoBehaviour
                     targetSlot.CardView.PlayDamageText(result.DamageDealt);
                     attackerSlot.CardView.PlayDamageText(result.DamageReceived);
                     PlaySplashHits(result.SplashHits, targetSlot, hitFX);
+                    playAttackerDeath?.Invoke();
                 });
         }
     }
@@ -241,8 +248,12 @@ public class UIManager : MonoBehaviour
             float dirX = Mathf.Sign(splashX - mainX);
 
             slot.CardView.PlayHitFX(hitFX);
-            slot.CardView.AttackAnimator.PlayKnockback(dirX);
             slot.CardView.PlayDamageText(splashHits[i].Damage);
+
+            if (!splashHits[i].Target.IsAlive)
+                slot.CardView.PlayDeath(null);
+            else
+                slot.CardView.AttackAnimator.PlayKnockback(dirX);
         }
     }
 

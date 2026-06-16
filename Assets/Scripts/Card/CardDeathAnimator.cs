@@ -51,7 +51,6 @@ public class CardDeathAnimator : MonoBehaviour
         seq.Join(lower.GetComponent<CanvasGroup>().DOFade(0f, dur * 0.7f).SetDelay(dur * 0.3f));
         seq.OnComplete(() =>
         {
-            group.alpha = 1f;
             Destroy(upper.gameObject);
             Destroy(lower.gameObject);
             Destroy(snap);

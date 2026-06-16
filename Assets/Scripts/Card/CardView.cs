@@ -22,6 +22,7 @@ public class CardView : MonoBehaviour
     public GameObject HitFXPrefab => _visual != null ? _visual.hitFXPrefab : null;
 
     private CardVisualConfig _visual;
+    private CardInstance _boundInstance;
 
     private void Awake()
     {
@@ -39,6 +40,12 @@ public class CardView : MonoBehaviour
 
     public void Bind(CardInstance instance)
     {
+        if (_boundInstance != null)
+            _boundInstance.OnHPChanged -= RefreshHP;
+
+        _boundInstance = instance;
+        instance.OnHPChanged += RefreshHP;
+
         CanvasGroup cg = GetComponent<CanvasGroup>();
         if (cg != null && cg) cg.alpha = 1f;
 
@@ -55,6 +62,11 @@ public class CardView : MonoBehaviour
 
         cardNameText.text = instance.data.cardName;
         hpText.Init(instance.data.maxHP, instance.currentHP);
+    }
+
+    private void RefreshHP()
+    {
+        hpText.SetHP(_boundInstance.currentHP);
     }
 
     public void SetFaceDown(bool faceDown)

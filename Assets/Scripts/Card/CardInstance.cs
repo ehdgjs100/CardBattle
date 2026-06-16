@@ -5,6 +5,7 @@ public class CardInstance
 {
     public event Action<int> OnHealed;
     public event Action OnHealCast;
+    public event Action OnHPChanged;
 
     public void RaiseHealCast() => OnHealCast?.Invoke();
     public CardDataBase data;
@@ -29,6 +30,7 @@ public class CardInstance
     public void TakeDamage(int amount)
     {
         currentHP = Mathf.Max(0, currentHP - amount);
+        OnHPChanged?.Invoke();
     }
 
     public void Heal(int amount)
@@ -37,6 +39,9 @@ public class CardInstance
         currentHP = Mathf.Min(data.maxHP, currentHP + amount);
         int healed = currentHP - before;
         if (healed > 0)
+        {
             OnHealed?.Invoke(healed);
+            OnHPChanged?.Invoke();
+        }
     }
 }
