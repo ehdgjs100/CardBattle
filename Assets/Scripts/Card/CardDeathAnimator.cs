@@ -32,7 +32,8 @@ public class CardDeathAnimator : MonoBehaviour
         Texture2D snap = CaptureCard(cam);
         GetPanelTransform(rootCanvas, cam, out Vector2 localCenter, out Vector2 panelSize);
 
-        CanvasGroup group = GetComponent<CanvasGroup>() ?? gameObject.AddComponent<CanvasGroup>();
+        CanvasGroup group = GetComponent<CanvasGroup>();
+        if (group == null) group = gameObject.AddComponent<CanvasGroup>();
         group.alpha = 0f;
 
         RectTransform upper = CreatePanel((RectTransform)rootCanvas.transform, snap, 1f, localCenter, panelSize);

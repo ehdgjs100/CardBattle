@@ -40,7 +40,7 @@ public class CardView : MonoBehaviour
     public void Bind(CardInstance instance)
     {
         CanvasGroup cg = GetComponent<CanvasGroup>();
-        if (cg != null) cg.alpha = 1f;
+        if (cg != null && cg) cg.alpha = 1f;
 
         CardVisualConfig visual = instance.data.visual;
         _visual = visual;

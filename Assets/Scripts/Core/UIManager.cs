@@ -172,11 +172,23 @@ public class UIManager : MonoBehaviour
             onAnimationComplete?.Invoke();
         };
 
-        if (!result.Target.IsAlive)
+        bool targetDied = !result.Target.IsAlive;
+        bool attackerDied = !result.Attacker.IsAlive;
+
+        if (targetDied || attackerDied)
         {
             CardView targetView = targetSlot.CardView;
-            Action afterDeath = onComplete;
-            onComplete = () => targetView.PlayDeath(afterDeath);
+            CardView attackerView = attackerSlot.CardView;
+            Action original = onComplete;
+
+            onComplete = () =>
+            {
+                int remaining = (targetDied ? 1 : 0) + (attackerDied ? 1 : 0);
+                Action onOne = () => { if (--remaining == 0) original?.Invoke(); };
+
+                if (targetDied) targetView.PlayDeath(onOne);
+                if (attackerDied) attackerView.PlayDeath(onOne);
+            };
         }
 
         GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
