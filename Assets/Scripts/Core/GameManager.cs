@@ -33,4 +33,12 @@ public class GameManager : MonoBehaviour
         CurrentState = state;
         OnStateChanged?.Invoke(state);
     }
+
+#if UNITY_EDITOR
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) SetState(GameState.Win);
+        if (Input.GetKeyDown(KeyCode.Alpha2)) SetState(GameState.Lose);
+    }
+#endif
 }

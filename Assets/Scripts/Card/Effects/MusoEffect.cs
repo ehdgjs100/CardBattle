@@ -14,7 +14,10 @@ public class MusoEffect : CardEffect
 
     public override void Execute(CardInstance attacker, CardInstance primaryTarget, IReadOnlyList<CardInstance> targetField)
     {
+        int counterDamage = primaryTarget.currentHP;
         primaryTarget.TakeDamage(attacker.currentHP);
+        if (primaryTarget.effect.DealsCounterDamage)
+            attacker.TakeDamage(counterDamage);
 
         List<CardInstance> adjacent = new List<CardInstance>();
         foreach (CardInstance card in targetField)

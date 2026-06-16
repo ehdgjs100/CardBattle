@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 [Serializable]
@@ -25,6 +26,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TurnCoin turnCoin;
     [SerializeField] private GameObject healFXPrefab;
     [SerializeField] private CardTypeIconEntry[] innerTypeIcons;
+    [SerializeField] private Button retryButton;
 
     private bool _hasDealtInitialCards;
     private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
@@ -39,6 +41,8 @@ public class UIManager : MonoBehaviour
         GameManager.Instance.OnStateChanged += HandleStateChanged;
         TurnManager.Instance.OnSelectionChanged += HandleSelectionChanged;
         BattleManager.Instance.OnAttackPerformed += HandleAttackPerformed;
+
+        retryButton?.onClick.AddListener(() => SceneManager.LoadScene(SceneManager.GetActiveScene().name));
     }
 
     private void SpawnCardViews(BattleSlot[] slots)
