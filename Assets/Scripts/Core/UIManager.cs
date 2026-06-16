@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
@@ -13,6 +14,8 @@ public class UIManager : MonoBehaviour
     [SerializeField] private WaitingCardCount enemyWaitingCount;
     [SerializeField] private TurnBanner turnBanner;
     [SerializeField] private ResultPanel resultPanel;
+
+    private bool _hasDealtInitialCards;
 
     private void Awake()
     {
@@ -50,8 +53,21 @@ public class UIManager : MonoBehaviour
 
     private void HandleStateChanged(GameState state)
     {
+        bool isFirstDeal = !_hasDealtInitialCards;
+
         RefreshField(playerSlots, GameManager.Instance.PlayerField);
         RefreshField(enemySlots, GameManager.Instance.EnemyField);
+        _hasDealtInitialCards = true;
+
+        if (isFirstDeal)
+        {
+            DOVirtual.DelayedCall(0f, () =>
+            {
+                DealCardsSequentially(playerSlots, playerWaitingCount, 0);
+                DealCardsSequentially(enemySlots, enemyWaitingCount, 0);
+            });
+        }
+
         playerWaitingCount?.SetCount(GameManager.Instance.PlayerField.WaitingCount);
         enemyWaitingCount?.SetCount(GameManager.Instance.EnemyField.WaitingCount);
 
@@ -96,7 +112,11 @@ public class UIManager : MonoBehaviour
 
             CardView cardView = slots[i].CardView;
 
-            if (previous != null && waitingCount != null)
+            if (!_hasDealtInitialCards && previous == null)
+            {
+                cardView.gameObject.SetActive(false);
+            }
+            else if (previous != null && waitingCount != null)
             {
                 cardView.SetFaceDown(true);
                 cardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position, () => cardView.SetFaceDown(false));
@@ -107,6 +127,28 @@ public class UIManager : MonoBehaviour
                 cardView.SetFaceDown(false);
             }
         }
+    }
+
+    private void DealCardsSequentially(BattleSlot[] slots, WaitingCardCount deckSource, int index)
+    {
+        if (index >= slots.Length) return;
+
+        BattleSlot slot = slots[index];
+        if (slot.Card == null)
+        {
+            DealCardsSequentially(slots, deckSource, index + 1);
+            return;
+        }
+
+        Vector3 deckPos = deckSource != null ? deckSource.transform.position : Vector3.zero;
+        CardView cardView = slot.CardView;
+
+        cardView.gameObject.SetActive(true);
+        cardView.SetFaceDown(true);
+        cardView.AttackAnimator.PlaySpawnFromDeck(deckPos, onFlip: () => cardView.SetFaceDown(false));
+
+        DOVirtual.DelayedCall(TurnManager.Instance.EnemyTurnDelay,
+            () => DealCardsSequentially(slots, deckSource, index + 1));
     }
 
     private void HandleAttackPerformed(AttackResult result, Action onAnimationComplete)

@@ -13,6 +13,7 @@ public class TurnManager : MonoBehaviour
     private CardInstance _selectedAttacker;
     private float _pendingSpawnDelay;
 
+    public float EnemyTurnDelay => enemyTurnDelay;
     public CardInstance SelectedAttacker => _selectedAttacker;
     public event Action OnSelectionChanged;
 

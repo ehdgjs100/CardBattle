@@ -60,7 +60,7 @@ public class CardAttackAnimator : MonoBehaviour
     private const float DefaultBackOvershoot = 1.70158f;
     private const float SpawnOvershoot = DefaultBackOvershoot * 0.5f;
 
-    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, float duration = SpawnDuration)
+    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, System.Action onComplete = null, float duration = SpawnDuration)
     {
         _rect.DOKill();
 
@@ -77,5 +77,6 @@ public class CardAttackAnimator : MonoBehaviour
         flip.Append(_rect.DOLocalRotate(new Vector3(0f, 90f, 0f), flipDuration).SetEase(Ease.InQuad));
         flip.AppendCallback(() => onFlip?.Invoke());
         flip.Append(_rect.DOLocalRotate(Vector3.zero, flipDuration).SetEase(Ease.OutQuad));
+        flip.OnComplete(() => onComplete?.Invoke());
     }
 }
