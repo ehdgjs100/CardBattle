@@ -20,12 +20,17 @@ public class HealerEffect : CardEffect
 
     public override void OnTurnStart(CardInstance self, IReadOnlyList<CardInstance> allyField)
     {
+        bool healed = false;
         foreach (CardInstance card in allyField)
         {
             if (card == null || card == self || !card.IsAlive)
                 continue;
 
             card.Heal(_healAmount);
+            healed = true;
         }
+
+        if (healed)
+            self.RaiseHealCast();
     }
 }

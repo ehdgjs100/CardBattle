@@ -388,6 +388,7 @@ MonoBehaviour:
   frontRoot: {fileID: 697012930332898009}
   cardBack: {fileID: 271778573139618309}
   damageTextPrefab: {fileID: 5741017687269082003, guid: f3d8e34772b3a564e8139004c77c8cbe, type: 3}
+  healTextPrefab: {fileID: 5741017687269082003, guid: d646a5bab1221ad4999f42d7d244664c, type: 3}
   projectilePrefab: {fileID: 5017687339376357378, guid: d3efa2d38babd5e40a4b62a82409cdd4, type: 3}
 --- !u!114 &7431356942310649248
 MonoBehaviour:

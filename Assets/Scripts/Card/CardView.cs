@@ -14,9 +14,11 @@ public class CardView : MonoBehaviour
     [SerializeField] private GameObject frontRoot;
     [SerializeField] private GameObject cardBack;
     [SerializeField] private DamageNumber damageTextPrefab;
+    [SerializeField] private DamageNumber healTextPrefab;
     [SerializeField] private Projectile projectilePrefab;
 
     public CardAttackAnimator AttackAnimator { get; private set; }
+    public CardDeathAnimator DeathAnimator { get; private set; }
     public GameObject HitFXPrefab => _visual != null ? _visual.hitFXPrefab : null;
 
     private CardVisualConfig _visual;
@@ -24,10 +26,22 @@ public class CardView : MonoBehaviour
     private void Awake()
     {
         AttackAnimator = GetComponent<CardAttackAnimator>();
+        DeathAnimator = GetComponent<CardDeathAnimator>();
+    }
+
+    public void PlayDeath(System.Action onComplete)
+    {
+        if (DeathAnimator != null)
+            DeathAnimator.Play(onComplete);
+        else
+            onComplete?.Invoke();
     }
 
     public void Bind(CardInstance instance)
     {
+        CanvasGroup cg = GetComponent<CanvasGroup>();
+        if (cg != null) cg.alpha = 1f;
+
         CardVisualConfig visual = instance.data.visual;
         _visual = visual;
 
@@ -68,9 +82,21 @@ public class CardView : MonoBehaviour
         DamageNumber popup = damageTextPrefab.Spawn(position, amount);
         popup.UpdateText();
 
-        Vector3 risePosition = position + Vector3.up * DamageRiseDistance;
-        DOTween.To(() => popup.position, value => popup.position = value, risePosition, DamageRiseDuration)
-            .SetEase(Ease.OutQuad);
+        DOTween.To(() => popup.position, value => popup.position = value,
+            position + Vector3.up * DamageRiseDistance, DamageRiseDuration).SetEase(Ease.OutQuad);
+    }
+
+    public void PlayHealText(int amount)
+    {
+        if (healTextPrefab == null || amount <= 0)
+            return;
+
+        Vector3 position = transform.position + new Vector3(0.5f, -0.5f, FXDepthOffset);
+        DamageNumber popup = healTextPrefab.Spawn(position, amount);
+        popup.UpdateText();
+
+        DOTween.To(() => popup.position, value => popup.position = value,
+            position + Vector3.up * DamageRiseDistance, DamageRiseDuration).SetEase(Ease.OutQuad);
     }
 
     public void PlayProjectile(Vector3 targetWorldPos, System.Action onArrive)

@@ -7,7 +7,8 @@ public class TurnManager : MonoBehaviour
     public static TurnManager Instance { get; private set; }
 
     [SerializeField] private float enemyTurnDelay = 0.9f;
-    [SerializeField] private float afterCoinDelay = 0.3f;
+    [SerializeField] private float afterCoinDelay = 0.5f;
+    [SerializeField] private float postHealDelay = 0.3f;
     [SerializeField] private TurnCoin turnCoin;
 
     private CardField _playerField;
@@ -16,6 +17,7 @@ public class TurnManager : MonoBehaviour
     private float _pendingSpawnDelay;
 
     public float EnemyTurnDelay => enemyTurnDelay;
+    public float TurnStartVisualDelay => (turnCoin != null ? turnCoin.Duration : 0f) + afterCoinDelay;
     public CardInstance SelectedAttacker => _selectedAttacker;
     public event Action OnSelectionChanged;
 
@@ -47,7 +49,7 @@ public class TurnManager : MonoBehaviour
         else
         {
             GameManager.Instance.SetState(GameState.EnemyTurn);
-            float coinDelay = turnCoin != null ? turnCoin.Duration + afterCoinDelay : 0f;
+            float coinDelay = turnCoin != null ? turnCoin.Duration + afterCoinDelay + postHealDelay : 0f;
             float delay = Mathf.Max(enemyTurnDelay, _pendingSpawnDelay, coinDelay);
             _pendingSpawnDelay = 0f;
             DOVirtual.DelayedCall(delay, RunEnemyTurn);

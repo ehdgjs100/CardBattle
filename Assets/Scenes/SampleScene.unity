@@ -313,7 +313,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110, y: -4}
+  m_AnchoredPosition: {x: -67.7, y: -4}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &91349059
@@ -942,8 +942,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Victory
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 1750660378}
+  m_fontAsset: {fileID: 11400000, guid: c8b4e07287909b7408fc61c8194472ea, type: 2}
+  m_sharedMaterial: {fileID: 3685444282390710613, guid: c8b4e07287909b7408fc61c8194472ea, type: 2}
   m_fontSharedMaterials:
   - {fileID: 1750660378}
   m_fontMaterial: {fileID: 1750660378}
@@ -1048,7 +1048,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -134, y: 8}
+  m_AnchoredPosition: {x: -95.79999, y: 8}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &471878240
@@ -1488,7 +1488,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -134, y: 8}
+  m_AnchoredPosition: {x: -91.700005, y: 8}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &568875110
@@ -2129,7 +2129,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -122, y: 2}
+  m_AnchoredPosition: {x: -79.700005, y: 2}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1057264831
@@ -2889,7 +2889,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -122, y: 2}
+  m_AnchoredPosition: {x: -83.79999, y: 2}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1328458802
@@ -2965,7 +2965,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 150, y: -35.2}
+  m_AnchoredPosition: {x: 150, y: -35.200012}
   m_SizeDelta: {x: 300, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1376758089
@@ -3452,7 +3452,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110, y: -4}
+  m_AnchoredPosition: {x: -71.8, y: -4}
   m_SizeDelta: {x: 56, y: 78}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1700467762
@@ -4074,6 +4074,7 @@ MonoBehaviour:
   enemyWaitingCount: {fileID: 75189173}
   resultPanel: {fileID: 1201044554}
   turnCoin: {fileID: 544117471}
+  healFXPrefab: {fileID: 147890, guid: a4a1462c4d222c040ba20b5994e8a35f, type: 3}
 --- !u!4 &2053393946
 Transform:
   m_ObjectHideFlags: 0

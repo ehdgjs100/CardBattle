@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
@@ -15,8 +16,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private WaitingCardCount enemyWaitingCount;
     [SerializeField] private ResultPanel resultPanel;
     [SerializeField] private TurnCoin turnCoin;
+    [SerializeField] private GameObject healFXPrefab;
 
     private bool _hasDealtInitialCards;
+    private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
 
     private void Awake()
     {
@@ -99,6 +102,13 @@ public class UIManager : MonoBehaviour
 
             slots[i].Bind(next);
 
+            if (next != null && _healSubscribed.Add(next))
+            {
+                CardInstance c = next;
+                next.OnHealed += amount => ShowHealFX(c, amount);
+                next.OnHealCast += () => PlayHealCastAnimation(c);
+            }
+
             if (previous == next || next == null)
                 continue;
 
@@ -162,6 +172,13 @@ public class UIManager : MonoBehaviour
             onAnimationComplete?.Invoke();
         };
 
+        if (!result.Target.IsAlive)
+        {
+            CardView targetView = targetSlot.CardView;
+            Action afterDeath = onComplete;
+            onComplete = () => targetView.PlayDeath(afterDeath);
+        }
+
         GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
 
         if (result.Attacker.effect.IsMelee)
@@ -215,6 +232,31 @@ public class UIManager : MonoBehaviour
             slot.CardView.AttackAnimator.PlayKnockback(dirX);
             slot.CardView.PlayDamageText(splashHits[i].Damage);
         }
+    }
+
+    private void ShowHealFX(CardInstance card, int amount)
+    {
+        float delay = TurnManager.Instance.TurnStartVisualDelay;
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            BattleSlot slot = FindSlot(card);
+            if (slot == null) return;
+
+            if (healFXPrefab != null)
+                Instantiate(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
+
+            slot.CardView.PlayHealText(amount);
+        });
+    }
+
+    private void PlayHealCastAnimation(CardInstance card)
+    {
+        float delay = TurnManager.Instance.TurnStartVisualDelay;
+        DOVirtual.DelayedCall(delay, () =>
+        {
+            BattleSlot slot = FindSlot(card);
+            slot?.CardView.AttackAnimator.PlayAttackPulse();
+        });
     }
 
     private BattleSlot FindSlot(CardInstance card)
