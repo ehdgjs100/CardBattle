@@ -44,7 +44,7 @@ public class CardUIView : MonoBehaviour
             Destroy(_frameOutlineMat);
     }
 
-    public void Bind(CardDataBase data)
+    public void Bind(CardDataBase data, string displayName = null)
     {
         CardVisualConfig visual = data.visual;
         if (visual != null)
@@ -69,7 +69,7 @@ public class CardUIView : MonoBehaviour
             innerTypeIconImage.gameObject.SetActive(inner != null);
         }
 
-        cardNameText?.SetText(data.cardName);
+        cardNameText?.SetText(displayName ?? data.cardName);
         cardDescText?.SetText(data.feature);
         hpText?.SetText(data.maxHP.ToString());
 

@@ -12,6 +12,9 @@ public class CardEditPanel : MonoBehaviour
     [SerializeField] private Transform collectionContainer;
     [SerializeField] private CardEditCardView cardEditPrefab;
 
+    [Header("Detail Panel")]
+    [SerializeField] private CardDetailPanel cardDetailPanel;
+
     [Header("Buttons")]
     [SerializeField] private Button closeButton;
 
@@ -89,12 +92,26 @@ public class CardEditPanel : MonoBehaviour
         }
         else
         {
-            if (deck.Count >= CardManager.MaxDeckSize) return;
-            int nextSlot = FindFirstEmptySlot();
-            if (nextSlot < 0) return;
-            CardManager.Instance.AddToDeck(ownedIndex);
-            AnimateToSlot(view, ownedIndex, entry, nextSlot);
+            cardDetailPanel?.Show(entry, ownedIndex, this);
         }
+    }
+
+    public bool IsInDeck(OwnedCardEntry entry) =>
+        FindDeckIndex(entry, CardManager.Instance.PlayerDeck) >= 0;
+
+    public void AddCardToDeck(int ownedIndex)
+    {
+        if (CardManager.Instance == null) return;
+        IReadOnlyList<OwnedCardEntry> deck = CardManager.Instance.PlayerDeck;
+        IReadOnlyList<OwnedCardEntry> owned = CardManager.Instance.OwnedCards;
+        if (ownedIndex < 0 || ownedIndex >= owned.Count) return;
+        OwnedCardEntry entry = owned[ownedIndex];
+        if (!_cardViews.TryGetValue(entry, out CardEditCardView view)) return;
+        if (deck.Count >= CardManager.MaxDeckSize) return;
+        int nextSlot = FindFirstEmptySlot();
+        if (nextSlot < 0) return;
+        CardManager.Instance.AddToDeck(ownedIndex);
+        AnimateToSlot(view, ownedIndex, entry, nextSlot);
     }
 
     private int FindFirstEmptySlot()
