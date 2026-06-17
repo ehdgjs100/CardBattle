@@ -58,6 +58,7 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
     public void OnClick()
     {
         if (Card == null) return;
+        if (UIManager.Instance != null && UIManager.Instance.IsInteractionLocked) return;
 
         if (TutorialManager.Instance != null && TutorialManager.Instance.IsActive)
             if (!TutorialManager.Instance.IsSlotAllowed(this)) return;

@@ -28,7 +28,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TMP_Text turnCountText;
     [SerializeField] private RectTransform turnPanel;
 
+    public bool IsInteractionLocked => _lockCount > 0;
+
     private bool _hasDealtInitialCards;
+    private int _lockCount;
     private readonly HashSet<CardInstance> _healSubscribed = new HashSet<CardInstance>();
     private Vector3 _turnTextOrigLocalPos;
 
@@ -110,6 +113,7 @@ public class UIManager : MonoBehaviour
 
         if (isFirstDeal)
         {
+            _lockCount += 2;
             StartCoroutine(DealCoroutine(playerSlots, playerWaitingCount));
             StartCoroutine(DealCoroutine(enemySlots, enemyWaitingCount));
         }
@@ -170,8 +174,13 @@ public class UIManager : MonoBehaviour
             }
             else if (previous != null && waitingCount != null)
             {
+                _lockCount++;
                 cardView.SetFaceDown(true);
-                cardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position, () => cardView.SetFaceDown(false));
+                cardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position, () =>
+                {
+                    cardView.SetFaceDown(false);
+                    _lockCount--;
+                });
                 TurnManager.Instance.NotifyCardSpawnAnimation(cardView.AttackAnimator.SpawnDuration);
             }
             else
@@ -200,6 +209,8 @@ public class UIManager : MonoBehaviour
             if (i < slots.Length - 1)
                 yield return new WaitForSeconds(stagger);
         }
+
+        _lockCount--;
     }
 
     private void HandleAttackPerformed(AttackResult result, Action onAnimationComplete)

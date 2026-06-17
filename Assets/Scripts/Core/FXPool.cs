@@ -40,6 +40,7 @@ public class FXPool : MonoBehaviour
 
     private void Return(GameObject prefab, GameObject obj)
     {
+        if (obj == null) return;
         obj.SetActive(false);
         if (_pools.TryGetValue(prefab, out Queue<GameObject> pool))
             pool.Enqueue(obj);
