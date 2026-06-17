@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [Serializable]
 public struct CardTypeIconEntry
@@ -105,6 +106,7 @@ public class UIManager : MonoBehaviour
 
     private void HandleStateChanged(GameState state)
     {
+        EventSystem.current?.SetSelectedGameObject(null);
         bool isFirstDeal = !_hasDealtInitialCards;
 
         RefreshField(playerSlots, GameManager.Instance.PlayerField);
@@ -224,11 +226,14 @@ public class UIManager : MonoBehaviour
             return;
         }
 
+        _lockCount++;
         attackerSlot.transform.SetAsLastSibling();
         attackerSlot.CardView.PlayAttackFX();
 
         Action onComplete = () =>
         {
+            _lockCount--;
+            EventSystem.current?.SetSelectedGameObject(null);
             turnCoin?.transform.SetAsLastSibling();
             onAnimationComplete?.Invoke();
         };

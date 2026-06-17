@@ -129,15 +129,17 @@ public class CardManager : MonoBehaviour
         return result;
     }
 
-    public CardDataBase DrawRandom()
+    public CardDataBase DrawRandom() => DrawRandom(normalRate, specialRate);
+
+    public CardDataBase DrawRandom(float nRate, float sRate)
     {
         if (cardLibrary == null) return null;
 
         float roll = Random.value;
         CardRarity rarity;
-        if (roll < normalRate)
+        if (roll < nRate)
             rarity = CardRarity.Normal;
-        else if (roll < normalRate + specialRate)
+        else if (roll < nRate + sRate)
             rarity = CardRarity.Special;
         else
             rarity = CardRarity.Epic;

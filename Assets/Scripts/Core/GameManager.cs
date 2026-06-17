@@ -9,6 +9,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private List<CardDataBase> playerDeck;
 
+    [Header("Enemy Deck Rates")]
+    [SerializeField] private float enemyNormalRate = 0.60f;
+    [SerializeField] private float enemySpecialRate = 0.30f;
+
     public CardField PlayerField { get; private set; }
     public CardField EnemyField { get; private set; }
     public GameState CurrentState { get; private set; } = GameState.Init;
@@ -58,7 +62,7 @@ public class GameManager : MonoBehaviour
 
         for (int i = 0; i < count; i++)
         {
-            CardDataBase card = CardManager.Instance.DrawRandom();
+            CardDataBase card = CardManager.Instance.DrawRandom(enemyNormalRate, enemySpecialRate);
             if (card != null)
                 result.Add(Instantiate(card));
         }
