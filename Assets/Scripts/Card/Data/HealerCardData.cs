@@ -4,7 +4,14 @@ using UnityEngine;
 public class HealerCardData : CardDataBase
 {
     public int healAmount = 1;
+    public int healPerUpgrade = 1;
 
     public override CardType CardType => CardType.Healer;
     public override CardEffect CreateEffect() => new HealerEffect(healAmount);
+
+    public override void ApplyUpgrade(int level)
+    {
+        base.ApplyUpgrade(level);
+        healAmount += healPerUpgrade * level;
+    }
 }

@@ -2316,8 +2316,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   playerDeck:
-  - {fileID: 11400000, guid: 91262f682a93ac145ae6a8f0dc70bb18, type: 2}
-  - {fileID: 11400000, guid: 35b7179f9203bd8468a56d393086fcf6, type: 2}
+  - {fileID: 11400000, guid: 3fcfe83313177bb4c9cda14c88de84ea, type: 2}
+  - {fileID: 11400000, guid: ed254218efe9552449292540fabce4ab, type: 2}
   - {fileID: 11400000, guid: 01550a32099963f41b48017d80a1ef1e, type: 2}
   - {fileID: 11400000, guid: f4e20f148661cad4eb934bb4ef151ef8, type: 2}
   - {fileID: 11400000, guid: b401f2b04c9a73745ac558400b01bfb1, type: 2}

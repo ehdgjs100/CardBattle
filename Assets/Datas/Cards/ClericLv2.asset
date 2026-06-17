@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53abff370c446f644a263f9e3e664771, type: 3}
+  m_Name: ClericLv2
+  m_EditorClassIdentifier: Assembly-CSharp::HealerCardData
+  cardName: "\uC131\uC9C1\uC790"
+  maxHP: 8
+  feature: "\uD68C\uBCF5"
+  description: "\uD134 \uC2DC\uC791 \uC2DC \uC544\uAD70\uC758 \uCCB4\uB825\uC744
+    \uD68C\uBCF5"
+  visual: {fileID: 11400000, guid: 0c546a672688db2408e39a48ce47a389, type: 2}
+  rarity: 1
+  hpPerUpgrade: 3
+  healAmount: 2
+  healPerUpgrade: 1

@@ -10,10 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4965a7bcb1b6f234d8b552e9d5ada2d2, type: 3}
-  m_Name: Assassin
+  m_Name: AssassinLv3
   m_EditorClassIdentifier: Assembly-CSharp::AssassinCardData
-  cardName: "\uC5B4\uC314\uC2E0"
-  maxHP: 5
+  cardName: "\uC554\uC0B4\uC790"
+  maxHP: 11
   feature: "\uC554\uC0B4"
   description: "\uD0F1\uCEE4 \uBB34\uC2DC / \uBC18\uACA9 \uD53C\uD574 \uC5C6\uC74C"
   visual: {fileID: 11400000, guid: b4cc1a8dcbf75384cae23d424b49c125, type: 2}
+  rarity: 2
+  hpPerUpgrade: 4

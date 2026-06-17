@@ -13,6 +13,7 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] private Image typeIconImage;
     [SerializeField] private Image innerTypeIconImage;
     [SerializeField] private Image rejectBorderImage;
+    [SerializeField] private Image rarityBorderImage;
     [SerializeField] private TMP_Text cardNameText;
     [SerializeField] private TMP_Text cardDescText;
     [SerializeField] private HPText hpText;
@@ -89,6 +90,9 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (cardDescText != null)
             cardDescText.text = instance.data.feature;
         hpText.Init(instance.data.maxHP, instance.currentHP);
+
+        if (rarityBorderImage != null)
+            rarityBorderImage.color = instance.data.GetRarityColor();
     }
 
     public void PlayReject()

@@ -10,12 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 53abff370c446f644a263f9e3e664771, type: 3}
-  m_Name: Cleric
+  m_Name: ClericLv1
   m_EditorClassIdentifier: Assembly-CSharp::HealerCardData
-  cardName: "\uC131\uC9C1\uC790"
+  cardName: "\uC0AC\uC81C"
   maxHP: 6
   feature: "\uD68C\uBCF5"
   description: "\uD134 \uC2DC\uC791 \uC2DC \uC544\uAD70\uC758 \uCCB4\uB825\uC744
     \uD68C\uBCF5"
   visual: {fileID: 11400000, guid: 0c546a672688db2408e39a48ce47a389, type: 2}
+  rarity: 0
+  hpPerUpgrade: 2
   healAmount: 1
+  healPerUpgrade: 1

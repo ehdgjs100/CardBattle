@@ -24,7 +24,7 @@ public class HealerEffect : CardEffect
         bool healed = false;
         foreach (CardInstance card in allyField)
         {
-            if (card == null || card == self || !card.IsAlive)
+            if (card == null || !card.IsAlive)
                 continue;
 
             card.QueueHeal(_healAmount);

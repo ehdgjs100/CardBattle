@@ -185,6 +185,7 @@ public class ResultPanel : MonoBehaviour
 
     private void GoToLobby()
     {
+        SceneManager.LoadScene(SceneNames.Lobby);
     }
 
     private void PlayFlash(Color color, float maxAlpha, float inDuration, float outDuration)

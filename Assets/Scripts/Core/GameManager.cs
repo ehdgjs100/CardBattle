@@ -22,7 +22,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        PlayerField = new CardField(playerDeck, Owner.Player);
+        List<CardDataBase> deck = (CardManager.Instance != null && CardManager.Instance.PlayerDeck.Count > 0)
+            ? CardManager.Instance.GetBattleDeck()
+            : playerDeck;
+
+        PlayerField = new CardField(deck, Owner.Player);
         EnemyField = new CardField(enemyDeck, Owner.Enemy);
 
         TurnManager.Instance.StartBattle(PlayerField, EnemyField);

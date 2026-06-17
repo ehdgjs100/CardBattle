@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 075c8500f132aac44bebc32d250be14c, type: 3}
+  m_Name: TankerLv1
+  m_EditorClassIdentifier: Assembly-CSharp::TankerCardData
+  cardName: "\uD0F1\uCEE4"
+  maxHP: 20
+  feature: "\uCCA0\uC639\uC131"
+  description: "\uC6B0\uC120\uACF5\uACA9 / \uBC18\uACA9\uD53C\uD574 \uC5C6\uC74C
+    / \uACF5\uACA9\uBD88\uAC00"
+  visual: {fileID: 11400000, guid: bb50abad4045e7e4284168a1de269ecf, type: 2}
+  rarity: 0
+  hpPerUpgrade: 3

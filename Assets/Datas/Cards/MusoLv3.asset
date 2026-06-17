@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66b659e4f41de674cbaef595f234a952, type: 3}
+  m_Name: MusoLv3
+  m_EditorClassIdentifier: Assembly-CSharp::MusoCardData
+  cardName: "\uC804\uC7C1\uAD70\uC8FC"
+  maxHP: 12
+  feature: "\uBC94\uC704 \uACF5\uACA9"
+  description: "\uACF5\uACA9 \uC2DC \uCD94\uAC00\uC801\uC778 \uACF5\uACA9\uC774 \uBC1C\uB3D9
+    \uB428"
+  visual: {fileID: 11400000, guid: 83560e38f873e904d93ff180ed560c55, type: 2}
+  rarity: 2
+  hpPerUpgrade: 4
+  splashRatio: 0.7
+  splashRatioPerUpgrade: 0.1

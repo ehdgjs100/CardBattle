@@ -8,6 +8,13 @@ public enum CardType
     Assassin
 }
 
+public enum CardRarity
+{
+    Normal,
+    Special,
+    Epic
+}
+
 public enum Owner
 {
     Player,
