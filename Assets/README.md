@@ -43,7 +43,17 @@
 - 카드 편집 화면 — 덱 슬롯 8개, 카드 DOTween 이동 배치, 등급·타입 순 정렬
 - 카드 강화 — 최대 1회, HP 증가, 인게임 즉시 반영
 - 카드 상세 패널 — 장착 / 강화 버튼, 버튼 조건부 비활성화
-- 적 덱 — 매 게임 CardLibrary에서 랜덤 10장 (확률 동일)
+- 적 덱 — 매 게임 CardLibrary에서 랜덤 10장, 등급 확률 Inspector에서 별도 설정 가능
+
+**튜토리얼**
+- 인게임 튜토리얼 — 최초 실행 시 로비 없이 GameScene 직행, TutorialCanvas(별도 Sort Order)로 지정 카드 하이라이트, DimOverlay + 카드 이동 가이드
+- 공격 완료 후 AttributeTutoSet → HpTutoSet 순차 팝업 (Scale 연출, 클릭 쿨다운)
+- 로비 튜토리얼 — 상점버튼 → chest1 → 결과패널 → 카드편집버튼 순차 가이드, 단계별 TMP 텍스트 페이드 연출
+- 모든 튜토리얼 UI 요소는 단계 전환 시 원래 Canvas 위치로 자동 복원
+
+**인게임 UX**
+- 초기 딜·공격 애니메이션·교체 스폰 중 클릭 차단 (`IsInteractionLocked` 카운터 시스템)
+- 상태 전환 시 `EventSystem.SetSelectedGameObject(null)` — 빈 슬롯 흰 배경 현상 방지
 
 **최적화**
 - `FXPool` — FX 프리팹 오브젝트 풀링, Instantiate/Destroy 제거로 모바일 GC 스파이크 방지
@@ -99,8 +109,13 @@ Assets/Scripts/
     ├── DeckSlotView.cs       # 덱 슬롯
     ├── ShopManager.cs        # 상점 뽑기 로직
     ├── LobbyPanel.cs         # 공용 슬라이드 패널
-    ├── LobbyManager.cs       # 로비 버튼 연결
-    └── BattleSlot.cs         # 전투 슬롯 (카드 배치·하이라이트)
+    ├── LobbyManager.cs       # 로비 버튼 연결, 튜토리얼 첫 진입 분기
+    ├── LobbyTutorialManager.cs  # 로비 튜토리얼 단계 관리
+    └── BattleSlot.cs         # 전투 슬롯 (카드 배치·하이라이트·클릭 차단)
+│
+├── Core/
+│   └── TutorialManager.cs   # 인게임 튜토리얼 (슬롯 하이라이트, 딤, 팝업 순서 관리)
+│   └── FXPool.cs            # FX 오브젝트 풀 (prefab 키 기반 Queue 관리)
 ```
 
 ### 설계 핵심
@@ -109,6 +124,8 @@ Assets/Scripts/
 - **ScriptableObject 기반 데이터** — 카드 데이터와 런타임 인스턴스 분리. `CardDataBase` SO → `CardInstance` 런타임 복사본
 - **PlayerPrefs 영속화** — 소유 카드·덱·강화 레벨을 키 기반으로 저장, 앱 재시작 후 복원
 - **DOTween 연출** — 모든 이동·공격·UI 애니메이션을 DOTween으로 처리, Inspector에서 타이밍 조정 가능
+- **튜토리얼 Canvas 분리** — TutorialCanvas(높은 Sort Order)로 특정 UI 요소를 임시 reparent해 DimOverlay 위에 렌더링, 단계 완료 시 원래 Canvas 복원
+- **인터랙션 락** — `UIManager.IsInteractionLocked` 카운터로 애니메이션 중 전체 슬롯 클릭 차단, 동시 다중 애니메이션도 안전하게 처리
 
 ---
 

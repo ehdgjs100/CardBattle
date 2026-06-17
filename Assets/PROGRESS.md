@@ -1,6 +1,6 @@
 # 진행 현황 (Progress)
 
-> 마지막 업데이트: 2026-06-17 (2차)
+> 마지막 업데이트: 2026-06-17 (3차)
 
 ---
 
@@ -87,6 +87,30 @@
 - [x] 뽑기 확률 — Normal 60% / Special 30% / Epic 10% (Inspector 조정 가능)
 - [x] 뽑기 결과 카드 팝인 스태거 애니메이션
 - [x] 확인 시 컬렉션 추가 / 닫기 시 미획득
+
+### 인게임 시스템 개선
+- [x] `GameManager.cs` — 적 덱 등급 확률 별도 설정 (`enemyNormalRate`, `enemySpecialRate`, Inspector 조정)
+- [x] `BattleSlot.cs` — 카드 배치/공격/스폰 애니메이션 중 클릭 차단 (`UIManager.IsInteractionLocked`)
+- [x] `UIManager.cs` — `IsInteractionLocked` 카운터 시스템 (초기 딜 × 2, 공격 애니메이션, 교체 스폰)
+- [x] `UIManager.cs` — 상태 변경/공격 완료 시 `EventSystem.SetSelectedGameObject(null)` → 빈 슬롯 흰 배경 방지
+- [x] `CardView.cs` — 강화 카드 인게임 이름 `+` 표시, 등급별 이름 색상
+- [x] `BattleSlot.cs` — `highlightVisual` z-order 수정 (카드 뒤에 렌더링)
+
+### 최적화
+- [x] `FXPool.cs` — FX 오브젝트 풀링 (Instantiate/Destroy 제거)
+- [x] `BattleManager.cs` — Dictionary/List 재사용 (매 공격마다 GC 제거)
+- [x] `FXPool.cs` — 씬 전환 시 파괴된 오브젝트 null 체크
+
+### 튜토리얼 시스템
+- [x] `TutorialManager.cs` — 인게임 튜토리얼 (플레이어 카드 선택 → 적 카드 선택 가이드)
+- [x] TutorialCanvas 별도 Canvas (높은 Sort Order) + DimOverlay 페이드
+- [x] 지정 슬롯 TutorialCanvas로 이동/복원, `worldPositionStays` 방식
+- [x] `BattleSlot.cs` — 튜토 중 허용된 슬롯만 클릭 가능
+- [x] 공격 완료 후 `AttributeTutoSet` → `HpTutoSet` 순 팝업 (Scale 연출, 클릭 쿨다운)
+- [x] `GameManager.cs` — 튜토 고정 덱 (`TutorialManager` 인스펙터 관리)
+- [x] `LobbyManager.cs` — 최초 실행 시 로비 건너뛰고 튜토 GameScene 진입
+- [x] `LobbyTutorialManager.cs` — 로비 튜토리얼 (상점버튼 → chest1 → 결과패널 → 카드편집버튼 순차 가이드)
+- [x] 각 단계 TMP 튜토 텍스트 페이드 연출, 단계 전환 시 원래 Canvas 복원
 
 ---
 
