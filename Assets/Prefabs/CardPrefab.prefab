@@ -410,11 +410,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 415f831fd6bed8e4a9f8f87dbdf63aff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CardAttackAnimator
-  lungeDuration: 0.15
+  lungeDuration: 0.2
   lungeRatio: 0.6
   attackPunchScale: 0.2
   hitPunchScale: 0.35
   hitDuration: 0.3
+  shakeDuration: 0.4
+  shakeStrength: 10
+  shakeVibrato: 15
+  knockbackDist: 45
+  knockbackOutDuration: 0.08
+  knockbackBackDuration: 0.22
+  spawnDuration: 1
+  spawnOvershoot: 0.85
+  assassinDisappearDuration: 0.2
+  assassinAppearDuration: 0.2
+  assassinSlashDuration: 0.3
+  assassinSlashAngle: 40
+  assassinTargetRatio: 0.85
 --- !u!114 &5215361865415262846
 MonoBehaviour:
   m_ObjectHideFlags: 0

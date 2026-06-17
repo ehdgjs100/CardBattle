@@ -16,7 +16,7 @@ MonoBehaviour:
   typeIcon: {fileID: 21300000, guid: 40751be72f29579478bc26d6523bf135, type: 3}
   frameColor: {r: 1, g: 1, b: 1, a: 1}
   animController: {fileID: 0}
-  attackFXPrefab: {fileID: 0}
+  attackFXPrefab: {fileID: 183222, guid: f2ee009e61b1177489331d95174281b1, type: 3}
   hitFXPrefab: {fileID: 171468, guid: f3fe85e613fbde545903336e4b326f68, type: 3}
   receivedHitFXPrefab: {fileID: 0}
   receivedHitFXOffset: {x: 0, y: 0}

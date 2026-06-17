@@ -4,11 +4,37 @@ using UnityEngine;
 [RequireComponent(typeof(RectTransform))]
 public class CardAttackAnimator : MonoBehaviour
 {
+    [Header("Melee")]
     [SerializeField] private float lungeDuration = 0.15f;
     [SerializeField] private float lungeRatio = 0.6f;
     [SerializeField] private float attackPunchScale = 0.2f;
+
+    [Header("Hit")]
     [SerializeField] private float hitPunchScale = 0.35f;
     [SerializeField] private float hitDuration = 0.3f;
+
+    [Header("Shake")]
+    [SerializeField] private float shakeDuration = 0.4f;
+    [SerializeField] private float shakeStrength = 10f;
+    [SerializeField] private int shakeVibrato = 15;
+
+    [Header("Knockback")]
+    [SerializeField] private float knockbackDist = 45f;
+    [SerializeField] private float knockbackOutDuration = 0.08f;
+    [SerializeField] private float knockbackBackDuration = 0.22f;
+
+    [Header("Spawn")]
+    [SerializeField] private float spawnDuration = 1f;
+    [SerializeField] private float spawnOvershoot = 0.85f;
+
+    [Header("Assassin")]
+    [SerializeField] private float assassinDisappearDuration = 0.08f;
+    [SerializeField] private float assassinAppearDuration = 0.1f;
+    [SerializeField] private float assassinSlashDuration = 0.22f;
+    [SerializeField] private float assassinSlashAngle = 40f;
+    [SerializeField] private float assassinTargetRatio = 0.85f;
+
+    public float SpawnDuration => spawnDuration;
 
     private RectTransform _rect;
     private Vector2 _originalAnchoredPos;
@@ -60,7 +86,7 @@ public class CardAttackAnimator : MonoBehaviour
     {
         _rect.DOKill();
         _rect.anchoredPosition = _originalAnchoredPos;
-        _rect.DOShakeAnchorPos(0.4f, new Vector2(10f, 0f), 15, 0f)
+        _rect.DOShakeAnchorPos(shakeDuration, new Vector2(shakeStrength, 0f), shakeVibrato, 0f)
             .OnComplete(() =>
             {
                 _rect.anchoredPosition = _originalAnchoredPos;
@@ -75,46 +101,35 @@ public class CardAttackAnimator : MonoBehaviour
         _rect.localScale = _originalScale;
         _rect.localRotation = Quaternion.identity;
 
-        Vector2 targetPos = _originalAnchoredPos + targetOffset * 0.85f;
-        const float disappearDuration = 0.08f;
-        const float appearDuration = 0.1f;
-        const float slashDuration = 0.22f;
+        Vector2 targetPos = _originalAnchoredPos + targetOffset * assassinTargetRatio;
 
         Sequence seq = DOTween.Sequence();
-        seq.Append(_rect.DOScale(Vector3.zero, disappearDuration).SetEase(Ease.InQuad));
+        seq.Append(_rect.DOScale(Vector3.zero, assassinDisappearDuration).SetEase(Ease.InQuad));
         seq.AppendCallback(() => _rect.anchoredPosition = targetPos);
-        seq.Append(_rect.DOScale(_originalScale, appearDuration).SetEase(Ease.OutBack, 2f));
+        seq.Append(_rect.DOScale(_originalScale, assassinAppearDuration).SetEase(Ease.OutBack, 2f));
         seq.AppendCallback(() =>
         {
-            _rect.DOPunchRotation(new Vector3(0f, 0f, -40f), slashDuration, 1, 0.3f);
+            _rect.DOPunchRotation(new Vector3(0f, 0f, -assassinSlashAngle), assassinSlashDuration, 1, 0.3f);
             onImpact?.Invoke();
         });
-        seq.AppendInterval(slashDuration);
-        seq.Append(_rect.DOScale(Vector3.zero, disappearDuration).SetEase(Ease.InQuad));
+        seq.AppendInterval(assassinSlashDuration);
+        seq.Append(_rect.DOScale(Vector3.zero, assassinDisappearDuration).SetEase(Ease.InQuad));
         seq.AppendCallback(() => _rect.anchoredPosition = _originalAnchoredPos);
-        seq.Append(_rect.DOScale(_originalScale, appearDuration).SetEase(Ease.OutBack, 2f));
+        seq.Append(_rect.DOScale(_originalScale, assassinAppearDuration).SetEase(Ease.OutBack, 2f));
         seq.OnComplete(() => onComplete?.Invoke());
     }
 
     public void PlayKnockback(float dirX)
     {
-        const float dist = 45f;
-        const float outDur = 0.08f;
-        const float backDur = 0.22f;
-
-        Vector2 pushed = _originalAnchoredPos + new Vector2(dirX * dist, 0f);
+        Vector2 pushed = _originalAnchoredPos + new Vector2(dirX * knockbackDist, 0f);
 
         DOTween.Sequence()
             .SetTarget(_rect)
-            .Append(_rect.DOAnchorPos(pushed, outDur).SetEase(Ease.OutQuad))
-            .Append(_rect.DOAnchorPos(_originalAnchoredPos, backDur).SetEase(Ease.OutBack));
+            .Append(_rect.DOAnchorPos(pushed, knockbackOutDuration).SetEase(Ease.OutQuad))
+            .Append(_rect.DOAnchorPos(_originalAnchoredPos, knockbackBackDuration).SetEase(Ease.OutBack));
     }
 
-    public const float SpawnDuration = 1f;
-    private const float DefaultBackOvershoot = 1.70158f;
-    private const float SpawnOvershoot = DefaultBackOvershoot * 0.5f;
-
-    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, System.Action onComplete = null, float duration = SpawnDuration)
+    public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, System.Action onComplete = null)
     {
         _rect.DOKill();
 
@@ -123,10 +138,10 @@ public class CardAttackAnimator : MonoBehaviour
         _rect.localScale = _originalScale * 0.5f;
         _rect.localRotation = Quaternion.identity;
 
-        _rect.DOMove(targetPos, duration).SetEase(Ease.OutBack, SpawnOvershoot);
-        _rect.DOScale(_originalScale, duration).SetEase(Ease.OutBack, SpawnOvershoot);
+        _rect.DOMove(targetPos, spawnDuration).SetEase(Ease.OutBack, spawnOvershoot);
+        _rect.DOScale(_originalScale, spawnDuration).SetEase(Ease.OutBack, spawnOvershoot);
 
-        float flipDuration = duration * 0.5f;
+        float flipDuration = spawnDuration * 0.5f;
         Sequence flip = DOTween.Sequence();
         flip.Append(_rect.DOLocalRotate(new Vector3(0f, 90f, 0f), flipDuration).SetEase(Ease.InQuad));
         flip.AppendCallback(() => onFlip?.Invoke());

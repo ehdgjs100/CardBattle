@@ -172,7 +172,7 @@ public class UIManager : MonoBehaviour
             {
                 cardView.SetFaceDown(true);
                 cardView.AttackAnimator.PlaySpawnFromDeck(waitingCount.transform.position, () => cardView.SetFaceDown(false));
-                TurnManager.Instance.NotifyCardSpawnAnimation(CardAttackAnimator.SpawnDuration);
+                TurnManager.Instance.NotifyCardSpawnAnimation(cardView.AttackAnimator.SpawnDuration);
             }
             else
             {

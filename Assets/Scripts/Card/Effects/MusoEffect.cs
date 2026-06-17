@@ -14,8 +14,9 @@ public class MusoEffect : CardEffect
 
     public override void Execute(CardInstance attacker, CardInstance primaryTarget, IReadOnlyList<CardInstance> targetField)
     {
+        int attackerHP = attacker.currentHP;
         int counterDamage = primaryTarget.currentHP;
-        primaryTarget.TakeDamage(attacker.currentHP);
+        primaryTarget.TakeDamage(attackerHP);
         if (primaryTarget.effect.DealsCounterDamage)
             attacker.TakeDamage(counterDamage);
 
@@ -33,7 +34,7 @@ public class MusoEffect : CardEffect
             return;
 
         CardInstance splashTarget = adjacent[Random.Range(0, adjacent.Count)];
-        int splashDamage = Mathf.RoundToInt(attacker.currentHP * _splashRatio);
+        int splashDamage = Mathf.RoundToInt(attackerHP * _splashRatio);
         splashTarget.TakeDamage(splashDamage);
     }
 }
