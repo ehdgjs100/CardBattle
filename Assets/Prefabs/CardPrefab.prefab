@@ -92,12 +92,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 50
+  m_fontSize: 40
   m_fontSizeBase: 50
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 72
+  m_fontSizeMax: 40
   m_fontStyle: 1
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -390,6 +390,7 @@ MonoBehaviour:
   typeIconImage: {fileID: 5273836065644514249}
   innerTypeIconImage: {fileID: 5616882934991995911}
   rejectBorderImage: {fileID: 5059132666542953553}
+  rarityBorderImage: {fileID: 0}
   cardNameText: {fileID: 591064635131269344}
   cardDescText: {fileID: 4228293122550209530}
   hpText: {fileID: 4911673500844370369}
