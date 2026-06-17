@@ -36,9 +36,9 @@ public class FloatingDesc : MonoBehaviour
 
     public void Show(string feature, string desc)
     {
+        gameObject.SetActive(true);
         featureText?.SetText(feature);
         descText?.SetText(desc);
-        gameObject.SetActive(true);
     }
 
     public void Hide()

@@ -245,7 +245,28 @@ public class UIManager : MonoBehaviour
 
         GameObject hitFX = attackerSlot.CardView.HitFXPrefab;
 
-        if (result.Attacker.effect.IsMelee)
+        if (result.Attacker.effect.IsAssassin)
+        {
+            Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
+                - ((RectTransform)attackerSlot.transform).anchoredPosition;
+
+            attackerSlot.CardView.AttackAnimator.PlayAssassinAttack(
+                offset,
+                onImpact: () =>
+                {
+                    targetSlot.CardView.PlayHitFX(hitFX);
+                    targetSlot.CardView.PlayReceivedHitFX();
+                    targetSlot.CardView.AttackAnimator.PlayHitReaction();
+                    targetSlot.CardView.RefreshHP();
+                    targetSlot.CardView.PlayDamageText(result.DamageDealt);
+                    attackerSlot.CardView.RefreshHP();
+                    attackerSlot.CardView.PlayDamageText(result.DamageReceived);
+                    PlaySplashHits(result.SplashHits, targetSlot, hitFX);
+                    playAttackerDeath?.Invoke();
+                },
+                onComplete: onComplete);
+        }
+        else if (result.Attacker.effect.IsMelee)
         {
             Vector2 offset = ((RectTransform)targetSlot.transform).anchoredPosition
                 - ((RectTransform)attackerSlot.transform).anchoredPosition;

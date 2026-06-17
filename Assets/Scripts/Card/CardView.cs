@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private Image illustrationImage;
     [SerializeField] private Image frameImage;
@@ -177,15 +177,30 @@ public class CardView : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Instantiate(projectilePrefab, from, Quaternion.identity).Launch(from, to, onArrive);
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
+    private const float LongPressDuration = 0.4f;
+    private Coroutine _longPressCoroutine;
+
+    public void OnPointerDown(PointerEventData eventData)
     {
         if (_boundInstance == null) return;
-        FloatingDesc.Instance?.Show(_boundInstance.data.feature, _boundInstance.data.description);
+        _longPressCoroutine = StartCoroutine(LongPressRoutine());
     }
 
-    public void OnPointerExit(PointerEventData eventData)
+    public void OnPointerUp(PointerEventData eventData)
     {
+        if (_longPressCoroutine != null)
+        {
+            StopCoroutine(_longPressCoroutine);
+            _longPressCoroutine = null;
+        }
         FloatingDesc.Instance?.Hide();
+    }
+
+    private System.Collections.IEnumerator LongPressRoutine()
+    {
+        yield return new WaitForSeconds(LongPressDuration);
+        FloatingDesc.Instance?.Show(_boundInstance.data.feature, _boundInstance.data.description);
+        _longPressCoroutine = null;
     }
 
     private const float FXDepthOffset = -0.5f;

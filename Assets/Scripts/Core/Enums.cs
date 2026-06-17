@@ -4,7 +4,8 @@ public enum CardType
     Ranged,
     Muso,
     Healer,
-    Tanker
+    Tanker,
+    Assassin
 }
 
 public enum Owner

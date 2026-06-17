@@ -72,7 +72,8 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
         {
             if (TurnManager.Instance.SelectedAttacker != null &&
                 GameManager.Instance.EnemyField.HasActiveTanker() &&
-                Card.data.CardType != CardType.Tanker)
+                Card.data.CardType != CardType.Tanker &&
+                !TurnManager.Instance.SelectedAttacker.effect.IgnoresTanker)
             {
                 UIManager.Instance.PlayTankerBlockReject();
                 return;

@@ -18,7 +18,7 @@ public static class EnemyAI
         if (attacker == null)
             return false;
 
-        bool hasTanker = playerField.HasActiveTanker();
+        bool hasTanker = playerField.HasActiveTanker() && !attacker.effect.IgnoresTanker;
         for (int i = 0; i < CardField.SlotCount; i++)
         {
             CardInstance card = playerField.Slots[i];

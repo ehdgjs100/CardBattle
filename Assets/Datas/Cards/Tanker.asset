@@ -9,9 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c57b9955c3bc90a4aa03e37f6dff2d14, type: 3}
+  m_Script: {fileID: 11500000, guid: 075c8500f132aac44bebc32d250be14c, type: 3}
   m_Name: Tanker
-  m_EditorClassIdentifier: Assembly-CSharp::RangedCardData
+  m_EditorClassIdentifier: Assembly-CSharp::TankerCardData
   cardName: "\uD0F1\uCEE4"
   maxHP: 25
   feature: "\uCCA0\uC639\uC131"

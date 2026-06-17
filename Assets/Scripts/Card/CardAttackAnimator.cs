@@ -68,6 +68,34 @@ public class CardAttackAnimator : MonoBehaviour
             });
     }
 
+    public void PlayAssassinAttack(Vector2 targetOffset, System.Action onImpact = null, System.Action onComplete = null)
+    {
+        _rect.DOKill();
+        _rect.anchoredPosition = _originalAnchoredPos;
+        _rect.localScale = _originalScale;
+        _rect.localRotation = Quaternion.identity;
+
+        Vector2 targetPos = _originalAnchoredPos + targetOffset * 0.85f;
+        const float disappearDuration = 0.08f;
+        const float appearDuration = 0.1f;
+        const float slashDuration = 0.22f;
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(_rect.DOScale(Vector3.zero, disappearDuration).SetEase(Ease.InQuad));
+        seq.AppendCallback(() => _rect.anchoredPosition = targetPos);
+        seq.Append(_rect.DOScale(_originalScale, appearDuration).SetEase(Ease.OutBack, 2f));
+        seq.AppendCallback(() =>
+        {
+            _rect.DOPunchRotation(new Vector3(0f, 0f, -40f), slashDuration, 1, 0.3f);
+            onImpact?.Invoke();
+        });
+        seq.AppendInterval(slashDuration);
+        seq.Append(_rect.DOScale(Vector3.zero, disappearDuration).SetEase(Ease.InQuad));
+        seq.AppendCallback(() => _rect.anchoredPosition = _originalAnchoredPos);
+        seq.Append(_rect.DOScale(_originalScale, appearDuration).SetEase(Ease.OutBack, 2f));
+        seq.OnComplete(() => onComplete?.Invoke());
+    }
+
     public void PlayKnockback(float dirX)
     {
         const float dist = 45f;

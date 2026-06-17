@@ -92,7 +92,7 @@ public class TurnManager : MonoBehaviour
         if (target == null || target.owner != Owner.Enemy || !target.IsAlive)
             return false;
 
-        if (_enemyField.HasActiveTanker() && target.data.CardType != CardType.Tanker)
+        if (_enemyField.HasActiveTanker() && target.data.CardType != CardType.Tanker && !_selectedAttacker.effect.IgnoresTanker)
             return false;
 
         GameManager.Instance.SetState(GameState.ApplyEffect);

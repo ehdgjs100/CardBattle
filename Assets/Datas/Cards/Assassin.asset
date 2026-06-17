@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4965a7bcb1b6f234d8b552e9d5ada2d2, type: 3}
+  m_Name: Assassin
+  m_EditorClassIdentifier: Assembly-CSharp::AssassinCardData
+  cardName: "\uC5B4\uC314\uC2E0"
+  maxHP: 5
+  feature: "\uC554\uC0B4"
+  description: "\uD0F1\uCEE4 \uBB34\uC2DC / \uBC18\uACA9 \uD53C\uD574 \uC5C6\uC74C"
+  visual: {fileID: 11400000, guid: b4cc1a8dcbf75384cae23d424b49c125, type: 2}
