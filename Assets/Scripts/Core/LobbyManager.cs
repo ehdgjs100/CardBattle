@@ -16,4 +16,14 @@ public class LobbyManager : MonoBehaviour
         cardEditButton?.onClick.AddListener(() => cardEditPanel?.Show());
         shopButton?.onClick.AddListener(() => shopPanel?.Show());
     }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
+    }
 }

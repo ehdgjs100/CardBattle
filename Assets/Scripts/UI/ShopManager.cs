@@ -91,7 +91,7 @@ public class ShopManager : MonoBehaviour
     private void OnConfirm()
     {
         foreach (CardDataBase card in _pendingCards)
-            CardManager.Instance?.AddToCollection(card);
+            CardManager.Instance?.GrantCard(card);
 
         _pendingCards.Clear();
         resultPanel.SetActive(false);
