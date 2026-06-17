@@ -86,7 +86,10 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             innerTypeIconImage.gameObject.SetActive(inner != null);
         }
 
-        cardNameText.text = instance.data.cardName;
+        cardNameText.text = instance.data.UpgradeLevel > 0
+            ? instance.data.cardName + "+1"
+            : instance.data.cardName;
+        cardNameText.color = instance.data.GetRarityColor();
         if (cardDescText != null)
             cardDescText.text = instance.data.feature;
         hpText.Init(instance.data.maxHP, instance.currentHP);

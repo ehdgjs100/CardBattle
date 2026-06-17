@@ -7,7 +7,6 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] private List<CardDataBase> playerDeck;
-    [SerializeField] private List<CardDataBase> enemyDeck;
 
     public CardField PlayerField { get; private set; }
     public CardField EnemyField { get; private set; }
@@ -22,14 +21,30 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        List<CardDataBase> deck = (CardManager.Instance != null && CardManager.Instance.PlayerDeck.Count > 0)
+        List<CardDataBase> playerCards = (CardManager.Instance != null && CardManager.Instance.PlayerDeck.Count > 0)
             ? CardManager.Instance.GetBattleDeck()
             : playerDeck;
 
-        PlayerField = new CardField(deck, Owner.Player);
-        EnemyField = new CardField(enemyDeck, Owner.Enemy);
+        List<CardDataBase> enemyCards = BuildEnemyDeck(10);
+
+        PlayerField = new CardField(playerCards, Owner.Player);
+        EnemyField = new CardField(enemyCards, Owner.Enemy);
 
         TurnManager.Instance.StartBattle(PlayerField, EnemyField);
+    }
+
+    private List<CardDataBase> BuildEnemyDeck(int count)
+    {
+        var result = new List<CardDataBase>();
+        if (CardManager.Instance == null) return result;
+
+        for (int i = 0; i < count; i++)
+        {
+            CardDataBase card = CardManager.Instance.DrawRandom();
+            if (card != null)
+                result.Add(Instantiate(card));
+        }
+        return result;
     }
 
     public void SetState(GameState state)
