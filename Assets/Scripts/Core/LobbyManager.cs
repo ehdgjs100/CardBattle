@@ -12,6 +12,12 @@ public class LobbyManager : MonoBehaviour
 
     private void Awake()
     {
+        if (TutorialManager.IsTutorialMode())
+        {
+            SceneManager.LoadScene(SceneNames.Game);
+            return;
+        }
+
         gameStartButton?.onClick.AddListener(() => SceneManager.LoadScene(SceneNames.Game));
         cardEditButton?.onClick.AddListener(() => cardEditPanel?.Show());
         shopButton?.onClick.AddListener(() => shopPanel?.Show());

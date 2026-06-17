@@ -57,19 +57,20 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
 
     public void OnClick()
     {
-        if (Card == null)
-            return;
+        if (Card == null) return;
+
+        if (TutorialManager.Instance != null && TutorialManager.Instance.IsActive)
+            if (!TutorialManager.Instance.IsSlotAllowed(this)) return;
 
         GameState state = GameManager.Instance.CurrentState;
 
+        bool isTutorialActive = TutorialManager.Instance != null && TutorialManager.Instance.IsActive;
+
         if (Card.owner == Owner.Player && state == GameState.PlayerSelectCard)
         {
-            if (Card.data.CardType == CardType.Tanker)
-            {
-                cardView.PlayReject();
-                return;
-            }
-            TurnManager.Instance.SelectAttacker(Card);
+            if (Card.data.CardType == CardType.Tanker) { cardView.PlayReject(); return; }
+            if (TurnManager.Instance.SelectAttacker(Card) && isTutorialActive)
+                TutorialManager.Instance.OnAttackerSelected();
         }
         else if (Card.owner == Owner.Enemy && state == GameState.PlayerSelectCard)
         {
@@ -81,7 +82,8 @@ public class BattleSlot : MonoBehaviour, IPointerClickHandler
                 UIManager.Instance.PlayTankerBlockReject();
                 return;
             }
-            TurnManager.Instance.SelectTarget(Card);
+            if (TurnManager.Instance.SelectTarget(Card) && isTutorialActive)
+                TutorialManager.Instance.OnTargetSelected();
         }
     }
 }

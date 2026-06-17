@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -21,11 +22,28 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        List<CardDataBase> playerCards = (CardManager.Instance != null && CardManager.Instance.PlayerDeck.Count > 0)
-            ? CardManager.Instance.GetBattleDeck()
-            : playerDeck;
+        StartCoroutine(InitBattle());
+    }
 
-        List<CardDataBase> enemyCards = BuildEnemyDeck(10);
+    private IEnumerator InitBattle()
+    {
+        yield return null;
+
+        List<CardDataBase> playerCards;
+        List<CardDataBase> enemyCards;
+
+        if (TutorialManager.IsTutorialMode())
+        {
+            playerCards = TutorialManager.Instance.PlayerDeck;
+            enemyCards = TutorialManager.Instance.EnemyDeck;
+        }
+        else
+        {
+            playerCards = (CardManager.Instance != null && CardManager.Instance.PlayerDeck.Count > 0)
+                ? CardManager.Instance.GetBattleDeck()
+                : playerDeck;
+            enemyCards = BuildEnemyDeck(10);
+        }
 
         PlayerField = new CardField(playerCards, Owner.Player);
         EnemyField = new CardField(enemyCards, Owner.Enemy);
