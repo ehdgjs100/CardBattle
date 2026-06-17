@@ -52,6 +52,7 @@ public class CardDetailPanel : MonoBehaviour
         {
             _cardEditPanel.RefreshCardView(_ownedIndex);
             Refresh();
+            cardUIView?.PlayHPPop();
         }
     }
 

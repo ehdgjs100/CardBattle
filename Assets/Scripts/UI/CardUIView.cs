@@ -47,7 +47,7 @@ public class CardUIView : MonoBehaviour
     public void Bind(OwnedCardEntry entry)
     {
         string displayName = entry.upgradeLevel > 0
-            ? entry.cardData.cardName + "+1"
+            ? entry.cardData.cardName + "+"
             : null;
         int displayHP = entry.cardData.maxHP + entry.cardData.hpPerUpgrade * entry.upgradeLevel;
         Bind(entry.cardData, displayName, displayHP);
@@ -96,6 +96,16 @@ public class CardUIView : MonoBehaviour
 
         if (rarityBorderImage != null)
             rarityBorderImage.color = data.GetRarityColor();
+    }
+
+    public void PlayHPPop()
+    {
+        if (hpText == null) return;
+        hpText.transform.DOKill();
+        hpText.transform.localScale = Vector3.one;
+        hpText.transform.DOScale(1.5f, 0.15f)
+            .SetEase(Ease.OutQuad)
+            .OnComplete(() => hpText.transform.DOScale(1f, 0.2f).SetEase(Ease.InBack));
     }
 
     public void PlayPopIn(float delay)

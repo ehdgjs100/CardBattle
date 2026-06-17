@@ -344,7 +344,7 @@ public class UIManager : MonoBehaviour
             if (slot == null) return;
 
             if (healFXPrefab != null)
-                Instantiate(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
+                FXPool.Instance.Spawn(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
 
             slot.CardView.RefreshHP();
             slot.CardView.PlayHealText(amount);

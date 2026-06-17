@@ -54,7 +54,7 @@ public class CardEditCardView : MonoBehaviour
         }
 
         string displayName = entry.upgradeLevel > 0
-            ? entry.cardData.cardName + "+1"
+            ? entry.cardData.cardName + "+"
             : entry.cardData.cardName;
         int displayHP = entry.cardData.maxHP + entry.cardData.hpPerUpgrade * entry.upgradeLevel;
         if (cardNameText != null)

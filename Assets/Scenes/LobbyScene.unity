@@ -573,6 +573,7 @@ GameObject:
   - component: {fileID: 221347225}
   - component: {fileID: 221347224}
   - component: {fileID: 221347223}
+  - component: {fileID: 221347226}
   m_Layer: 5
   m_Name: UpgradeBtn
   m_TagString: Untagged
@@ -682,6 +683,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 221347221}
   m_CullTransparentMesh: 1
+--- !u!114 &221347226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 221347221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2208ff72d31d5246b9f317782b3ff54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonScaleEffect
+  pressedScale: 0.9
+  releasedScale: 1.1
+  pressDuration: 0.08
+  releaseDuration: 0.15
 --- !u!1 &238840643
 GameObject:
   m_ObjectHideFlags: 0
@@ -1245,9 +1262,9 @@ RectTransform:
   - {fileID: 1050989947}
   m_Father: {fileID: 935285622}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 250, y: 450}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 450}
   m_SizeDelta: {x: 350, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &520483536
@@ -1890,6 +1907,7 @@ GameObject:
   - component: {fileID: 709829855}
   - component: {fileID: 709829854}
   - component: {fileID: 709829853}
+  - component: {fileID: 709829856}
   m_Layer: 5
   m_Name: EquiptBtn
   m_TagString: Untagged
@@ -1999,6 +2017,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 709829851}
   m_CullTransparentMesh: 1
+--- !u!114 &709829856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 709829851}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2208ff72d31d5246b9f317782b3ff54, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonScaleEffect
+  pressedScale: 0.9
+  releasedScale: 1.1
+  pressDuration: 0.08
+  releaseDuration: 0.15
 --- !u!1001 &742643306
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3399,9 +3433,9 @@ RectTransform:
   - {fileID: 539626909}
   m_Father: {fileID: 935285622}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 250, y: 650}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 650}
   m_SizeDelta: {x: 350, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1211632822
@@ -3848,7 +3882,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -8894378161134838276, guid: 219143ec315ef474693ae835fabda53b, type: 3}
+  m_Sprite: {fileID: -6840748152365457924, guid: a06b32287b42c6e469dd4dbbcb3549ab, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5511,9 +5545,9 @@ RectTransform:
   - {fileID: 1875143863}
   m_Father: {fileID: 935285622}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 250, y: 850}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 850}
   m_SizeDelta: {x: 350, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1965196884
@@ -6528,8 +6562,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18

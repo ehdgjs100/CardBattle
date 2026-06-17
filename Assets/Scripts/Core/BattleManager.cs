@@ -9,6 +9,9 @@ public class BattleManager : MonoBehaviour
     public event Action<AttackResult, Action> OnAttackPerformed;
     public int TotalKills { get; private set; }
 
+    private readonly Dictionary<CardInstance, int> _otherHPBefore = new();
+    private readonly List<SplashHit> _splashHits = new();
+
     private void Awake()
     {
         Instance = this;
@@ -19,11 +22,11 @@ public class BattleManager : MonoBehaviour
         int attackerHPBefore = attacker.currentHP;
         int targetHPBefore = target.currentHP;
 
-        Dictionary<CardInstance, int> otherHPBefore = new Dictionary<CardInstance, int>();
+        _otherHPBefore.Clear();
         foreach (CardInstance card in targetField.Slots)
         {
             if (card != null && card != target)
-                otherHPBefore[card] = card.currentHP;
+                _otherHPBefore[card] = card.currentHP;
         }
 
         attacker.effect.Execute(attacker, target, targetField.Slots);
@@ -31,19 +34,19 @@ public class BattleManager : MonoBehaviour
         int damageDealt = targetHPBefore - target.currentHP;
         int damageReceived = attackerHPBefore - attacker.currentHP;
 
-        List<SplashHit> splashHits = new List<SplashHit>();
-        foreach (KeyValuePair<CardInstance, int> entry in otherHPBefore)
+        _splashHits.Clear();
+        foreach (KeyValuePair<CardInstance, int> entry in _otherHPBefore)
         {
             int splashDamage = entry.Value - entry.Key.currentHP;
             if (splashDamage > 0)
-                splashHits.Add(new SplashHit(entry.Key, splashDamage));
+                _splashHits.Add(new SplashHit(entry.Key, splashDamage));
         }
 
         if (attacker.owner == Owner.Player)
         {
             if (!target.IsAlive) TotalKills++;
-            for (int i = 0; i < splashHits.Count; i++)
-                if (!splashHits[i].Target.IsAlive)
+            for (int i = 0; i < _splashHits.Count; i++)
+                if (!_splashHits[i].Target.IsAlive)
                     TotalKills++;
         }
 
@@ -54,7 +57,7 @@ public class BattleManager : MonoBehaviour
             onComplete?.Invoke();
         }
 
-        AttackResult result = new AttackResult(attacker, target, damageDealt, damageReceived, splashHits);
+        AttackResult result = new AttackResult(attacker, target, damageDealt, damageReceived, _splashHits);
 
         if (OnAttackPerformed != null)
             OnAttackPerformed.Invoke(result, Resolve);

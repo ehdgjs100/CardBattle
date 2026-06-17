@@ -55,10 +55,11 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (_visual == null || _visual.deathFXPrefab == null) return;
 
         Vector3 position = transform.position + new Vector3(0f, 0f, FXDepthOffset);
-        GameObject fx = Instantiate(_visual.deathFXPrefab, position, Quaternion.identity);
+        GameObject fx = FXPool.Instance.Spawn(_visual.deathFXPrefab, position, Quaternion.identity);
 
-        foreach (Renderer r in fx.GetComponentsInChildren<Renderer>(true))
-            r.sortingOrder = 100;
+        if (fx != null)
+            foreach (Renderer r in fx.GetComponentsInChildren<Renderer>(true))
+                r.sortingOrder = 100;
     }
 
     public void Bind(CardInstance instance)
@@ -87,7 +88,7 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
 
         cardNameText.text = instance.data.UpgradeLevel > 0
-            ? instance.data.cardName + "+1"
+            ? instance.data.cardName + "+"
             : instance.data.cardName;
         cardNameText.color = instance.data.GetRarityColor();
         if (cardDescText != null)
@@ -140,7 +141,7 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Vector2 offset = _visual.receivedHitFXOffset;
         Vector3 position = transform.position + new Vector3(offset.x, offset.y, FXDepthOffset);
         Quaternion rotation = Quaternion.Euler(_visual.receivedHitFXRotation);
-        Instantiate(_visual.receivedHitFXPrefab, position, rotation);
+        FXPool.Instance.Spawn(_visual.receivedHitFXPrefab, position, rotation);
     }
 
     public void PlayDamageText(int amount)
@@ -216,10 +217,9 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private void SpawnFX(GameObject prefab)
     {
-        if (prefab == null)
-            return;
+        if (prefab == null) return;
 
         Vector3 position = transform.position + new Vector3(0f, 0f, FXDepthOffset);
-        Instantiate(prefab, position, Quaternion.identity);
+        FXPool.Instance.Spawn(prefab, position, Quaternion.identity);
     }
 }

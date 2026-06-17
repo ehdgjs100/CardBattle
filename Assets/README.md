@@ -45,6 +45,10 @@
 - 카드 상세 패널 — 장착 / 강화 버튼, 버튼 조건부 비활성화
 - 적 덱 — 매 게임 CardLibrary에서 랜덤 10장 (확률 동일)
 
+**최적화**
+- `FXPool` — FX 프리팹 오브젝트 풀링, Instantiate/Destroy 제거로 모바일 GC 스파이크 방지
+- `BattleManager` — 공격 처리 시 Dictionary/List 재사용, 매 턴 GC 할당 제거
+
 ---
 
 ## 주요 코드 구조
@@ -122,6 +126,7 @@ Assets/Scripts/
 | 에셋 | 출처 |
 |---|---|
 | Green Card TCG kit | FantasyLoft (Unity Asset Store) |
+| Epic Toon FX | MTC Games (Unity Asset Store) |
 | SB 어그로 폰트 | 산돌구름 |
 | DOTween | Demigiant (Unity Asset Store) |
 | Damage Numbers Pro | CodeMonkeyUnity (Unity Asset Store) |
