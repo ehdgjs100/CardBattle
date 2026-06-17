@@ -1082,7 +1082,7 @@ Canvas:
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 1
-  m_Camera: {fileID: 0}
+  m_Camera: {fileID: 519420031}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
@@ -4354,7 +4354,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1340560371
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4509,6 +4509,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1436151714}
+  - component: {fileID: 1436151715}
   m_Layer: 0
   m_Name: LobbyTutorialManager
   m_TagString: Untagged
@@ -4531,6 +4532,31 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1436151715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1436151713}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56de632c011042941b3b2bf0ba43900b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LobbyTutorialManager
+  tutorialCanvas: {fileID: 328922579}
+  dimOverlay: {fileID: 1340560372}
+  tutorialText: {fileID: 0}
+  dimAlpha: 0.9
+  shopButton: {fileID: 1211632822}
+  shopPanelOpenDelay: 0.4
+  chest1Image: {fileID: 1197761499}
+  draw1Button: {fileID: 2004601435}
+  resultPanel: {fileID: 325326833}
+  confirmButton: {fileID: 1127365610}
+  shopCloseButton: {fileID: 963182859}
+  shopPanelCloseDelay: 0.4
+  cardEditButton: {fileID: 520483536}
 --- !u!1 &1479964938
 GameObject:
   m_ObjectHideFlags: 0
