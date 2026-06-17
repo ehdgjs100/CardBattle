@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Linq;
 
 public class CardEditPanel : MonoBehaviour
 {
@@ -41,13 +42,29 @@ public class CardEditPanel : MonoBehaviour
     private void BuildViews()
     {
         if (CardManager.Instance == null) return;
-        IReadOnlyList<OwnedCardEntry> owned = CardManager.Instance.OwnedCards;
-        for (int i = 0; i < owned.Count; i++)
+
+        IEnumerable<OwnedCardEntry> sorted = CardManager.Instance.OwnedCards
+            .OrderByDescending(e => e.cardData.rarity)
+            .ThenBy(e => e.cardData.CardType);
+
+        foreach (OwnedCardEntry entry in sorted)
         {
-            OwnedCardEntry entry = owned[i];
             if (_cardViews.ContainsKey(entry)) continue;
             _cardViews[entry] = Instantiate(cardEditPrefab, collectionContainer);
         }
+    }
+
+    private void SortCollectionViews()
+    {
+        var inCollection = _cardViews
+            .Where(kvp => kvp.Value.transform.parent == collectionContainer)
+            .OrderByDescending(kvp => kvp.Key.cardData.rarity)
+            .ThenBy(kvp => kvp.Key.cardData.CardType)
+            .Select(kvp => kvp.Value)
+            .ToList();
+
+        for (int i = 0; i < inCollection.Count; i++)
+            inCollection[i].transform.SetSiblingIndex(i);
     }
 
     private void LayoutCards()
@@ -74,6 +91,8 @@ public class CardEditPanel : MonoBehaviour
                 view.Bind(entry, i, false, OnCardClick);
             }
         }
+
+        SortCollectionViews();
     }
 
     private void OnCardClick(int ownedIndex)
@@ -94,6 +113,16 @@ public class CardEditPanel : MonoBehaviour
         {
             cardDetailPanel?.Show(entry, ownedIndex, this);
         }
+    }
+
+    public void RefreshCardView(int ownedIndex)
+    {
+        if (CardManager.Instance == null) return;
+        IReadOnlyList<OwnedCardEntry> owned = CardManager.Instance.OwnedCards;
+        if (ownedIndex < 0 || ownedIndex >= owned.Count) return;
+        OwnedCardEntry entry = owned[ownedIndex];
+        if (!_cardViews.TryGetValue(entry, out CardEditCardView view)) return;
+        view.Bind(entry, ownedIndex, IsInDeck(entry), OnCardClick);
     }
 
     public bool IsInDeck(OwnedCardEntry entry) =>
@@ -153,6 +182,7 @@ public class CardEditPanel : MonoBehaviour
         DOTween.Kill((RectTransform)view.transform);
         view.transform.SetParent(collectionContainer, false);
         view.Bind(entry, ownedIndex, false, OnCardClick);
+        SortCollectionViews();
     }
 
     private static int FindDeckIndex(OwnedCardEntry entry, IReadOnlyList<OwnedCardEntry> deck)

@@ -30,11 +30,7 @@ public class CardDetailPanel : MonoBehaviour
 
     private void Refresh()
     {
-        string displayName = _entry.upgradeLevel > 0
-            ? _entry.cardData.cardName + "+1"
-            : _entry.cardData.cardName;
-
-        cardUIView?.Bind(_entry.cardData, displayName);
+        cardUIView?.Bind(_entry);
 
         bool isInDeck = _cardEditPanel.IsInDeck(_entry);
         bool deckFull = CardManager.Instance.PlayerDeck.Count >= CardManager.MaxDeckSize;
@@ -53,7 +49,10 @@ public class CardDetailPanel : MonoBehaviour
     private void OnUpgrade()
     {
         if (CardManager.Instance.UpgradeCard(_ownedIndex))
+        {
+            _cardEditPanel.RefreshCardView(_ownedIndex);
             Refresh();
+        }
     }
 
     private void Close()

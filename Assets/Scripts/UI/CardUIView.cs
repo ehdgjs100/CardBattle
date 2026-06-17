@@ -44,7 +44,16 @@ public class CardUIView : MonoBehaviour
             Destroy(_frameOutlineMat);
     }
 
-    public void Bind(CardDataBase data, string displayName = null)
+    public void Bind(OwnedCardEntry entry)
+    {
+        string displayName = entry.upgradeLevel > 0
+            ? entry.cardData.cardName + "+1"
+            : null;
+        int displayHP = entry.cardData.maxHP + entry.cardData.hpPerUpgrade * entry.upgradeLevel;
+        Bind(entry.cardData, displayName, displayHP);
+    }
+
+    public void Bind(CardDataBase data, string displayName = null, int? overrideHP = null)
     {
         CardVisualConfig visual = data.visual;
         if (visual != null)
@@ -69,9 +78,13 @@ public class CardUIView : MonoBehaviour
             innerTypeIconImage.gameObject.SetActive(inner != null);
         }
 
-        cardNameText?.SetText(displayName ?? data.cardName);
+        if (cardNameText != null)
+        {
+            cardNameText.SetText(displayName ?? data.cardName);
+            cardNameText.color = data.GetRarityColor();
+        }
         cardDescText?.SetText(data.feature);
-        hpText?.SetText(data.maxHP.ToString());
+        hpText?.SetText((overrideHP ?? data.maxHP).ToString());
 
         if (frameOutline != null)
         {

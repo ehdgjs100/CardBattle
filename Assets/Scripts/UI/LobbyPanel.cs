@@ -23,11 +23,6 @@ public class LobbyPanel : MonoBehaviour
         closeButton?.onClick.AddListener(Hide);
     }
 
-    private void Start()
-    {
-        gameObject.SetActive(false);
-    }
-
     public void Show()
     {
         gameObject.SetActive(true);

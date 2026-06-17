@@ -53,8 +53,16 @@ public class CardEditCardView : MonoBehaviour
             innerTypeIconImage.gameObject.SetActive(inner != null);
         }
 
-        cardNameText?.SetText(entry.cardData.cardName);
-        hpText?.SetText(entry.cardData.maxHP.ToString());
+        string displayName = entry.upgradeLevel > 0
+            ? entry.cardData.cardName + "+1"
+            : entry.cardData.cardName;
+        int displayHP = entry.cardData.maxHP + entry.cardData.hpPerUpgrade * entry.upgradeLevel;
+        if (cardNameText != null)
+        {
+            cardNameText.SetText(displayName);
+            cardNameText.color = entry.cardData.GetRarityColor();
+        }
+        hpText?.SetText(displayHP.ToString());
 
         if (rarityBorderImage != null)
             rarityBorderImage.color = entry.cardData.GetRarityColor();
