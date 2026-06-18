@@ -40,6 +40,7 @@ public class CardAttackAnimator : MonoBehaviour
     private RectTransform _rect;
     private Vector2 _originalAnchoredPos;
     private Vector3 _originalScale;
+    private bool _isSpawning;
 
     private void Awake()
     {
@@ -70,6 +71,7 @@ public class CardAttackAnimator : MonoBehaviour
 
     public void PlayAttackPulse()
     {
+        if (_isSpawning) return;
         _rect.DOKill();
         _rect.localScale = _originalScale;
         _rect.DOPunchScale(_originalScale * attackPunchScale, lungeDuration, 1, 0f);
@@ -134,6 +136,7 @@ public class CardAttackAnimator : MonoBehaviour
     public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, System.Action onComplete = null)
     {
         _rect.DOKill();
+        _isSpawning = true;
 
         Vector3 targetPos = _rect.position;
         _rect.position = originWorldPos;
@@ -148,6 +151,10 @@ public class CardAttackAnimator : MonoBehaviour
         flip.Append(_rect.DOLocalRotate(new Vector3(0f, 90f, 0f), flipDuration).SetEase(Ease.InQuad));
         flip.AppendCallback(() => onFlip?.Invoke());
         flip.Append(_rect.DOLocalRotate(Vector3.zero, flipDuration).SetEase(Ease.OutQuad));
-        flip.OnComplete(() => onComplete?.Invoke());
+        flip.OnComplete(() =>
+        {
+            _isSpawning = false;
+            onComplete?.Invoke();
+        });
     }
 }
