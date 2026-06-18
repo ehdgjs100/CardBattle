@@ -43,12 +43,21 @@ public class TurnManager : MonoBehaviour
             TurnNumber++;
 
         CardField allyField = turnOwner == Owner.Player ? _playerField : _enemyField;
+        bool willHeal = FieldWillHeal(allyField);
         TriggerTurnStartEffects(allyField);
 
         if (turnOwner == Owner.Player)
         {
             _pendingSpawnDelay = 0f;
-            GameManager.Instance.SetState(GameState.PlayerSelectCard);
+            if (willHeal)
+            {
+                float delay = TurnStartVisualDelay + postHealDelay;
+                DOVirtual.DelayedCall(delay, () => GameManager.Instance.SetState(GameState.PlayerSelectCard));
+            }
+            else
+            {
+                GameManager.Instance.SetState(GameState.PlayerSelectCard);
+            }
         }
         else
         {
@@ -129,6 +138,22 @@ public class TurnManager : MonoBehaviour
                 StartTurn(turnOwner == Owner.Player ? Owner.Enemy : Owner.Player);
                 break;
         }
+    }
+
+    private static bool FieldWillHeal(CardField field)
+    {
+        bool hasHealer = false;
+        bool needsHeal = false;
+
+        for (int i = 0; i < CardField.SlotCount; i++)
+        {
+            CardInstance card = field.Slots[i];
+            if (card == null || !card.IsAlive) continue;
+            if (card.data.CardType == CardType.Healer) hasHealer = true;
+            if (card.currentHP < card.data.maxHP) needsHeal = true;
+        }
+
+        return hasHealer && needsHeal;
     }
 
     private void TriggerTurnStartEffects(CardField field)

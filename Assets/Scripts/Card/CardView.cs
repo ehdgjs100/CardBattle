@@ -21,7 +21,8 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     [SerializeField] private GameObject cardBack;
     [SerializeField] private DamageNumber damageTextPrefab;
     [SerializeField] private DamageNumber healTextPrefab;
-    [SerializeField] private Projectile projectilePrefab;
+    [SerializeField] private GameObject projectileVFXPrefab;
+    [SerializeField] private float projectileSpeed = 12f;
 
     public CardAttackAnimator AttackAnimator { get; private set; }
     public CardDeathAnimator DeathAnimator { get; private set; }
@@ -174,7 +175,7 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void PlayProjectile(Vector3 targetWorldPos, System.Action onArrive)
     {
-        if (projectilePrefab == null)
+        if (projectileVFXPrefab == null)
         {
             onArrive?.Invoke();
             return;
@@ -182,7 +183,28 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         Vector3 from = transform.position + new Vector3(0f, 0f, FXDepthOffset);
         Vector3 to = targetWorldPos + new Vector3(0f, 0f, FXDepthOffset);
-        Instantiate(projectilePrefab, from, Quaternion.identity).Launch(from, to, onArrive);
+
+        GameObject vfx = Instantiate(projectileVFXPrefab, from, Quaternion.identity);
+        Vector3 dir = (to - from).normalized;
+        vfx.transform.rotation = Quaternion.Euler(0f, 0f, Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg);
+
+        float duration = Vector3.Distance(from, to) / projectileSpeed;
+        vfx.transform.DOMove(to, duration)
+            .SetEase(Ease.Linear)
+            .OnComplete(() =>
+            {
+                onArrive?.Invoke();
+                ParticleSystem ps = vfx.GetComponentInChildren<ParticleSystem>();
+                if (ps != null)
+                {
+                    ps.Stop();
+                    Destroy(vfx, ps.main.startLifetime.constantMax);
+                }
+                else
+                {
+                    Destroy(vfx);
+                }
+            });
     }
 
     private const float LongPressDuration = 0.4f;

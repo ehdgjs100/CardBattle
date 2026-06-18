@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: AssassinLv3
   m_EditorClassIdentifier: Assembly-CSharp::AssassinCardData
   cardName: "\uC554\uC0B4\uC790"
-  maxHP: 11
+  maxHP: 6
   feature: "\uC554\uC0B4"
   description: "\uD0F1\uCEE4 \uBB34\uC2DC / \uBC18\uACA9 \uD53C\uD574 \uC5C6\uC74C"
   visual: {fileID: 11400000, guid: b4cc1a8dcbf75384cae23d424b49c125, type: 2}
   rarity: 2
-  hpPerUpgrade: 4
+  hpPerUpgrade: 1

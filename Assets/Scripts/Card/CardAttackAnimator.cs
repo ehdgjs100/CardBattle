@@ -20,8 +20,9 @@ public class CardAttackAnimator : MonoBehaviour
 
     [Header("Knockback")]
     [SerializeField] private float knockbackDist = 45f;
-    [SerializeField] private float knockbackOutDuration = 0.08f;
-    [SerializeField] private float knockbackBackDuration = 0.22f;
+    [SerializeField] private float knockbackOutDuration = 0.18f;
+    [SerializeField] private float knockbackPauseDuration = 0.1f;
+    [SerializeField] private float knockbackBackDuration = 0.14f;
 
     [Header("Spawn")]
     [SerializeField] private float spawnDuration = 1f;
@@ -125,8 +126,9 @@ public class CardAttackAnimator : MonoBehaviour
 
         DOTween.Sequence()
             .SetTarget(_rect)
-            .Append(_rect.DOAnchorPos(pushed, knockbackOutDuration).SetEase(Ease.OutQuad))
-            .Append(_rect.DOAnchorPos(_originalAnchoredPos, knockbackBackDuration).SetEase(Ease.OutBack));
+            .Append(_rect.DOAnchorPos(pushed, knockbackOutDuration).SetEase(Ease.OutQuart))
+            .AppendInterval(knockbackPauseDuration)
+            .Append(_rect.DOAnchorPos(_originalAnchoredPos, knockbackBackDuration).SetEase(Ease.OutQuart));
     }
 
     public void PlaySpawnFromDeck(Vector3 originWorldPos, System.Action onFlip = null, System.Action onComplete = null)

@@ -4552,6 +4552,9 @@ MonoBehaviour:
   dimOverlay: {fileID: 1340560372}
   tutorialText: {fileID: 0}
   dimAlpha: 0.9
+  startDelay: 0
+  dimFadeInDuration: 0
+  dimFadeOutDuration: 0.3
   shopButton: {fileID: 1211632822}
   shopPanelOpenDelay: 0.4
   chest1Image: {fileID: 1197761499}

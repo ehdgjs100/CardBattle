@@ -398,7 +398,8 @@ MonoBehaviour:
   cardBack: {fileID: 271778573139618309}
   damageTextPrefab: {fileID: 5741017687269082003, guid: f3d8e34772b3a564e8139004c77c8cbe, type: 3}
   healTextPrefab: {fileID: 5741017687269082003, guid: d646a5bab1221ad4999f42d7d244664c, type: 3}
-  projectilePrefab: {fileID: 5017687339376357378, guid: d3efa2d38babd5e40a4b62a82409cdd4, type: 3}
+  projectileVFXPrefab: {fileID: 150356, guid: 051f86580e12ef1418f1cdaf5f991bf9, type: 3}
+  projectileSpeed: 12
 --- !u!114 &7431356942310649248
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,6 +422,7 @@ MonoBehaviour:
   shakeVibrato: 15
   knockbackDist: 45
   knockbackOutDuration: 0.08
+  knockbackPauseDuration: 0.1
   knockbackBackDuration: 0.22
   spawnDuration: 1
   spawnOvershoot: 0.85

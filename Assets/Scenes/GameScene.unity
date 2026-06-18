@@ -3744,7 +3744,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TurnManager
   enemyTurnDelay: 0.6
   afterCoinDelay: 0.6
-  postHealDelay: 0.6
+  postHealDelay: 0
   turnCoin: {fileID: 544117471}
 --- !u!4 &1180601257
 Transform:
@@ -7008,7 +7008,7 @@ MonoBehaviour:
   enemyWaitingCount: {fileID: 75189173}
   resultPanel: {fileID: 1201044554}
   turnCoin: {fileID: 544117471}
-  healFXPrefab: {fileID: 147890, guid: a4a1462c4d222c040ba20b5994e8a35f, type: 3}
+  healFXPrefab: {fileID: 4569046032541823318, guid: 05a5b88d8739923469dc9a226ac75d0f, type: 3}
   innerTypeIcons:
   - type: 0
     sprite: {fileID: 2173825331329112767, guid: d46d9696061c991428bbe9f78fac68f7, type: 3}

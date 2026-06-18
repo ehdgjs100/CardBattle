@@ -9,6 +9,9 @@ public class LobbyTutorialManager : MonoBehaviour
     [SerializeField] private CanvasGroup dimOverlay;
     [SerializeField] private TMP_Text tutorialText;
     [SerializeField] private float dimAlpha = 0.7f;
+    [SerializeField] private float startDelay = 0.5f;
+    [SerializeField] private float dimFadeInDuration = 0.4f;
+    [SerializeField] private float dimFadeOutDuration = 0.3f;
 
     [Header("Step 1 - Shop Button")]
     [SerializeField] private Button shopButton;
@@ -29,7 +32,6 @@ public class LobbyTutorialManager : MonoBehaviour
 
     private RaiseData _shopButtonData;
     private RaiseData _chest1ImageData;
-    private RaiseData _draw1ButtonData;
     private RaiseData _resultPanelData;
     private RaiseData _shopCloseButtonData;
     private RaiseData _cardEditButtonData;
@@ -60,7 +62,16 @@ public class LobbyTutorialManager : MonoBehaviour
         confirmButton.onClick.AddListener(OnConfirmButtonClicked);
         shopCloseButton.onClick.AddListener(OnShopCloseButtonClicked);
         cardEditButton.onClick.AddListener(OnCardEditButtonClicked);
-        DOVirtual.DelayedCall(0.5f, StartStep1);
+        DOVirtual.DelayedCall(startDelay, StartStep1);
+    }
+
+    private void OnDisable()
+    {
+        shopButton?.onClick.RemoveListener(OnShopButtonClicked);
+        draw1Button?.onClick.RemoveListener(OnDraw1ButtonClicked);
+        confirmButton?.onClick.RemoveListener(OnConfirmButtonClicked);
+        shopCloseButton?.onClick.RemoveListener(OnShopCloseButtonClicked);
+        cardEditButton?.onClick.RemoveListener(OnCardEditButtonClicked);
     }
 
     // Step 1 — dim + 상점 버튼
@@ -84,7 +95,6 @@ public class LobbyTutorialManager : MonoBehaviour
     private void StartStep2()
     {
         _chest1ImageData = Raise(chest1Image);
-        _draw1ButtonData = Raise((RectTransform)draw1Button.transform);
         _step2Active = true;
         ShowText("상자를 오픈합니다");
     }
@@ -95,7 +105,6 @@ public class LobbyTutorialManager : MonoBehaviour
         _step2Active = false;
         HideText();
         Restore(chest1Image, _chest1ImageData);
-        Restore((RectTransform)draw1Button.transform, _draw1ButtonData);
         DOVirtual.DelayedCall(0.05f, StartStep3);
     }
 
@@ -122,16 +131,13 @@ public class LobbyTutorialManager : MonoBehaviour
         if (!_waitingForShopClose) return;
         _waitingForShopClose = false;
         Restore((RectTransform)shopCloseButton.transform, _shopCloseButtonData);
-        HideDim(() => DOVirtual.DelayedCall(shopPanelCloseDelay, StartStep4));
+        DOVirtual.DelayedCall(shopPanelCloseDelay, StartStep4);
     }
 
     // Step 4 — 카드 편집 버튼
     private void StartStep4()
     {
-        ShowDim(() =>
-        {
-            _cardEditButtonData = Raise((RectTransform)cardEditButton.transform);
-        });
+        _cardEditButtonData = Raise((RectTransform)cardEditButton.transform);
     }
 
     private void OnCardEditButtonClicked()
@@ -150,12 +156,12 @@ public class LobbyTutorialManager : MonoBehaviour
     {
         dimOverlay.gameObject.SetActive(true);
         dimOverlay.alpha = 0f;
-        dimOverlay.DOFade(dimAlpha, 0.4f).OnComplete(() => onComplete?.Invoke());
+        dimOverlay.DOFade(dimAlpha, dimFadeInDuration).OnComplete(() => onComplete?.Invoke());
     }
 
     private void HideDim(System.Action onComplete = null)
     {
-        dimOverlay.DOFade(0f, 0.3f).OnComplete(() =>
+        dimOverlay.DOFade(0f, dimFadeOutDuration).OnComplete(() =>
         {
             dimOverlay.gameObject.SetActive(false);
             onComplete?.Invoke();

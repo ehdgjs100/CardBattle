@@ -351,30 +351,20 @@ public class UIManager : MonoBehaviour
 
     private void ShowHealFX(CardInstance card, int amount)
     {
-        float delay = TurnManager.Instance.TurnStartVisualDelay;
-        DOVirtual.DelayedCall(delay, () =>
-        {
-            card.ApplyHeal(amount);
+        BattleSlot slot = FindSlot(card);
+        if (slot == null) return;
 
-            BattleSlot slot = FindSlot(card);
-            if (slot == null) return;
+        if (healFXPrefab != null)
+            FXPool.Instance.Spawn(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
 
-            if (healFXPrefab != null)
-                FXPool.Instance.Spawn(healFXPrefab, slot.transform.position + new Vector3(0f, 0f, -0.5f), Quaternion.identity);
-
-            slot.CardView.RefreshHP();
-            slot.CardView.PlayHealText(amount);
-        });
+        slot.CardView.RefreshHP();
+        slot.CardView.PlayHealText(amount);
     }
 
     private void PlayHealCastAnimation(CardInstance card)
     {
-        float delay = TurnManager.Instance.TurnStartVisualDelay;
-        DOVirtual.DelayedCall(delay, () =>
-        {
-            BattleSlot slot = FindSlot(card);
-            slot?.CardView.AttackAnimator.PlayAttackPulse();
-        });
+        BattleSlot slot = FindSlot(card);
+        slot?.CardView.AttackAnimator.PlayAttackPulse();
     }
 
     private void PlayTurnTextChange(int turnNumber)

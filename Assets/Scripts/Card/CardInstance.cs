@@ -34,12 +34,8 @@ public class CardInstance
     public void QueueHeal(int amount)
     {
         int actual = Mathf.Min(amount, data.maxHP - currentHP);
-        if (actual > 0)
-            OnHealQueued?.Invoke(actual);
-    }
-
-    public void ApplyHeal(int amount)
-    {
-        currentHP = Mathf.Min(data.maxHP, currentHP + amount);
+        if (actual <= 0) return;
+        currentHP = Mathf.Min(data.maxHP, currentHP + actual);
+        OnHealQueued?.Invoke(actual);
     }
 }
