@@ -19,21 +19,64 @@ public class CardEditPanel : MonoBehaviour
     [Header("Buttons")]
     [SerializeField] private Button closeButton;
 
+    [Header("Entrance Animation")]
+    [SerializeField] private RectTransform deckSet;
+    [SerializeField] private RectTransform cardAllSet;
+
     private readonly Dictionary<OwnedCardEntry, CardEditCardView> _cardViews = new();
+    private Vector2 _deckSetOrigin;
+    private Vector2 _cardAllSetOrigin;
 
     private void Awake()
     {
         closeButton?.onClick.AddListener(OnClose);
+
+        if (deckSet != null) _deckSetOrigin = deckSet.anchoredPosition;
+        if (cardAllSet != null) _cardAllSetOrigin = cardAllSet.anchoredPosition;
     }
 
     private void OnEnable()
     {
         BuildViews();
         LayoutCards();
+        PlayEntranceAnimation();
+    }
+
+    private void PlayEntranceAnimation()
+    {
+        const float offScreenOffset = 1600f;
+        const float duration = 0.55f;
+
+        if (deckSet != null)
+        {
+            DOTween.Kill(deckSet);
+            deckSet.anchoredPosition = _deckSetOrigin + Vector2.left * offScreenOffset;
+            deckSet.DOAnchorPos(_deckSetOrigin, duration).SetEase(Ease.OutBack);
+        }
+
+        if (cardAllSet != null)
+        {
+            DOTween.Kill(cardAllSet);
+            cardAllSet.anchoredPosition = _cardAllSetOrigin + Vector2.left * offScreenOffset;
+            cardAllSet.DOAnchorPos(_cardAllSetOrigin, duration)
+                .SetEase(Ease.OutBack)
+                .SetDelay(0.5f);
+        }
     }
 
     private void OnDisable()
     {
+        if (deckSet != null)
+        {
+            DOTween.Kill(deckSet);
+            deckSet.anchoredPosition = _deckSetOrigin;
+        }
+        if (cardAllSet != null)
+        {
+            DOTween.Kill(cardAllSet);
+            cardAllSet.anchoredPosition = _cardAllSetOrigin;
+        }
+
         foreach (CardEditCardView v in _cardViews.Values)
             Destroy(v.gameObject);
         _cardViews.Clear();

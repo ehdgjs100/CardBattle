@@ -6,6 +6,7 @@ public class LobbyPanel : MonoBehaviour
 {
     [SerializeField] private Button closeButton;
     [SerializeField] private float animDuration = 0.3f;
+    [SerializeField] private bool instantShow;
 
     private CanvasGroup _canvasGroup;
     private RectTransform _rect;
@@ -26,6 +27,14 @@ public class LobbyPanel : MonoBehaviour
     public void Show()
     {
         gameObject.SetActive(true);
+
+        if (instantShow)
+        {
+            _rect.anchoredPosition = _shownPos;
+            _canvasGroup.alpha = 1f;
+            return;
+        }
+
         _rect.anchoredPosition = _shownPos + Vector2.down * 1400f;
         _canvasGroup.alpha = 0f;
 
